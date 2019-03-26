@@ -6,10 +6,9 @@ import java.net.InetAddress;
 import java.util.UUID;
 import java.util.Vector;
 
-import javax.vecmath.Vector3f;
-
 import ray.networking.client.GameConnectionClient;
 import ray.rml.Vector3;
+import ray.rml.Vector3f;
 
 public class ProtocolClient extends GameConnectionClient{
 	private chainedGame game;
@@ -50,14 +49,15 @@ public class ProtocolClient extends GameConnectionClient{
 						|| (msgTokens[0].compareTo("create") == 0)){
 							//format: create, remoteId, x,y,z or dsfr, remoteID, x,y,z
 							UUID ghostID = UUID.fromString(msgTokens[1]);
-							Vector3 ghostPosition = Vector3.createFrom(
+							Vector3 ghostPosition = Vector3f.createFrom(
 									Float.parseFloat(msgTokens[2]),
 									Float.parseFloat(msgTokens[3]),
 									Float.parseFloat(msgTokens[4]));
 							try {
 								createGhostAvatar(ghostID, ghostPosition);
-							}	catch(IOException e) {
+							}	catch (Exception e) {
 								System.out.println("error creating ghost avatar");
+								e.printStackTrace();
 							}
 					}
 					//add more messages
@@ -86,6 +86,10 @@ public class ProtocolClient extends GameConnectionClient{
 					game.addGhostAvatarToGameWorld(avatar);
 				} catch(IOException e) { e.printStackTrace();
 				}
+			}
+			
+			public void removeGhostAvatar(UUID ghostID) {
+				System.out.println("removeGhostAvatar unimplemented");
 			}
 }
 
