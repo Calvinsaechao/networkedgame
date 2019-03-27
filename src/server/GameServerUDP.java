@@ -66,9 +66,9 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 		// format : create, remoteId, x, y, z
 		try {
 			String message = new String("create," + clientID.toString());
-			message += "," + position[0];
-			message += "," + position[1];
-			message += "," + position[2];
+			message += "," + pos[0];
+			message += "," + pos[1];
+			message += "," + pos[2];
 			forwardPacketToAll(message, clientID);
 		}catch(IOException e) {e.printStackTrace();}
 		
