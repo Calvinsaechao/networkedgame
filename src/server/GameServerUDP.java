@@ -107,9 +107,15 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 		
 	}
 	
-	private void sendMoveMessages(UUID clientID) {
-		// TODO Auto-generated method stub
-		
+	private void sendMoveMessages(UUID clientID, String[] pos) {
+		// format : move, clientID, x,y,z
+				try {
+					String message = new String("move," + clientID.toString());
+					message += "," + pos[0];
+					message += "," + pos[1];
+					message += "," + pos[2];
+					forwardPacketToAll(message, clientID);
+				}catch(IOException e) {e.printStackTrace();}
 	}
 	
 

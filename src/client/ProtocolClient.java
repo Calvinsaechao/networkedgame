@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.util.UUID;
 import java.util.Vector;
 
+import javax.vecmath.Vector3d;
+
 import ray.networking.client.GameConnectionClient;
 import ray.rml.Vector3;
 import ray.rml.Vector3f;
@@ -76,7 +78,12 @@ public class ProtocolClient extends GameConnectionClient{
 			}
 	
 			public void sendDetailsForMessage(UUID avatarID, Vector3 playerPosition) {
-				// TODO Auto-generated method stub
+				// format: dsfr, localId, x, y, z
+				try {
+					String message = new String("dsfr," + id.toString());
+					message += "," + playerPosition.x() +"," + pos.y() + "," + pos.z();
+					sendPacket(message);
+				} catch (IOException e) { e.printStackTrace();}
 				
 			}
 			public void sendCreateMessage(Vector3 pos) {
@@ -85,8 +92,7 @@ public class ProtocolClient extends GameConnectionClient{
 					String message = new String("create," + id.toString());
 					message += "," + pos.x() +"," + pos.y() + "," + pos.z();
 					sendPacket(message);
-				} catch (IOException e) { e.printStackTrace();
-				}
+				} catch (IOException e) { e.printStackTrace();}
 			}
 			//add send messages
 			
@@ -100,6 +106,15 @@ public class ProtocolClient extends GameConnectionClient{
 			
 			public void removeGhostAvatar(UUID ghostID) {
 				System.out.println("removeGhostAvatar unimplemented");
+			}
+			
+			public void sendMoveMessage(Vector3 pos) {
+				// format : move, localId, x, y ,z 
+				String message = new String("move," + id.toString());
+				message += "," + pos.x() +"," + pos.y() + "," + pos.z();
+				try {
+					sendPacket(message);
+				} catch (IOException e) {e.printStackTrace();}	
 			}
 }
 

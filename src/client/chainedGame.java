@@ -45,7 +45,7 @@ public class chainedGame extends VariableFrameRateGame{
 		super();
 		this.serverAddress = serverAddr;
 		this.serverPort = sPort;
-		this.serverProtocol = ProtocolType.TCP;
+		this.serverProtocol = ProtocolType.UDP;
 	}
 	
 	public static void main(String[] args) {
@@ -112,6 +112,9 @@ public class chainedGame extends VariableFrameRateGame{
 	protected void setupScene(Engine arg0, SceneManager arg1) throws IOException {
 		// TODO Auto-generated method stub
 		im = new GenericInputManager();
+		// make skybox
+		// make terrain
+		// make avatars
 		
 	}
 
@@ -154,6 +157,10 @@ public class chainedGame extends VariableFrameRateGame{
 					avatar.setNode(ghostN);
 					avatar.setEntity(ghostE);
 					avatar.setPosition(0, 0, 0); } 
+	}
+	
+	public void addAvatarToGameWorld(Avatar avatar) throws IOException{
+		
 	}
 	
 	public void setIsConnected(boolean bool) {
