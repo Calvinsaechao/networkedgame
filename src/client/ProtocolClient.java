@@ -60,6 +60,11 @@ public class ProtocolClient extends GameConnectionClient{
 								e.printStackTrace();
 							}
 					}
+					if(msgTokens[0].compareTo("wsds") == 0){//wants details
+						Vector3 playerPosition = game.getPlayerPosition();//Get the players position
+						UUID avatarID = UUID.fromString(msgTokens[1]);
+						sendDetailsForMessage(avatarID, playerPosition);//Send details of the player position to the server
+					}
 					//add more messages
 				}
 			}
@@ -68,6 +73,11 @@ public class ProtocolClient extends GameConnectionClient{
 					sendPacket(new String("join," + id.toString()));
 				} catch(IOException e) { e.printStackTrace();
 				}
+			}
+	
+			public void sendDetailsForMessage(UUID avatarID, Vector3 playerPosition) {
+				// TODO Auto-generated method stub
+				
 			}
 			public void sendCreateMessage(Vector3 pos) {
 				//format: (create, localId, x,y,z)
