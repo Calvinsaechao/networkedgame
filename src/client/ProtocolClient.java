@@ -81,7 +81,7 @@ public class ProtocolClient extends GameConnectionClient{
 				// format: dsfr, localId, x, y, z
 				try {
 					String message = new String("dsfr," + id.toString());
-					message += "," + playerPosition.x() +"," + pos.y() + "," + pos.z();
+					message += "," + playerPosition.x() +"," + playerPosition.y() + "," + playerPosition.z();
 					sendPacket(message);
 				} catch (IOException e) { e.printStackTrace();}
 				
