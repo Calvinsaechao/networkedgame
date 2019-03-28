@@ -50,7 +50,11 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 			
 			//server receives a DETAILS-FOR message
 			if(msgTokens[0].compareTo("dsfr") == 0) {
-				// CODE HERE
+				// format : dsfr, ghostID, avatarID, x, y, z
+				UUID ghostID = UUID.fromString(msgTokens[1]);
+				UUID avatarID = UUID.fromString(msgTokens[2]);
+				String[] position = {msgTokens[3],msgTokens[4],msgTokens[5]};
+				sendDetailsMessage(ghostID, avatarID, position);//Tell the details for a particular client
 			}
 			
 			//server receives a MOVE message
