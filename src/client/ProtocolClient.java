@@ -63,9 +63,14 @@ public class ProtocolClient extends GameConnectionClient{
 							}
 					}
 					if(msgTokens[0].compareTo("wsds") == 0){//wants details
+						//format : wsds, 
 						Vector3 playerPosition = game.getPlayerPosition();//Get the players position
 						UUID avatarID = UUID.fromString(msgTokens[1]);
 						sendDetailsForMessage(avatarID, playerPosition);//Send details of the player position to the server
+					}
+					if(msgTokens[0].compareTo("move") == 0) {
+						//format: move, 
+						
 					}
 					//add more messages
 				}
