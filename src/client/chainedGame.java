@@ -142,13 +142,13 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public Vector3 getPlayerPosition() {
-		SceneNode dolphinN = sm.getSceneNode("dolphinNode");
+		SceneNode dolphinN = sm.getSceneNode("playerNode");
 		return dolphinN.getWorldPosition();
 	}
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
 		if (avatar != null) {  
-			Entity ghostE = sm.createEntity("ghost", "whatever.obj");
+			Entity ghostE = sm.createEntity("ghost", "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
 			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(
 					avatar.getID().toString());
@@ -160,6 +160,15 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void addAvatarToGameWorld(Avatar avatar) throws IOException{
+		if (avatar != null) {}
+		Entity playerE = sm.createEntity("player", "dolphinHighPoly.obj");
+		playerE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
+		playerN.attachObject(playerE);
+		playerN.setLocalPosition(0,0,0);
+		avatar.setNode(playerN);
+		avatar.setEntity(playerE);
+		avatar.setPosition(0, 0, 0);
 		
 	}
 	

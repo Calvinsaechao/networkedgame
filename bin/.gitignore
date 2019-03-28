@@ -1,2 +1,6 @@
 /client/
 /server/
+/Controllers/
+/WorldObjects/
+/Actions/
+/ActionClasses/
