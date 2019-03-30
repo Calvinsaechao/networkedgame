@@ -122,6 +122,7 @@ public class chainedGame extends VariableFrameRateGame{
 	@Override
 	protected void setupScene(Engine eng, SceneManager sm) throws IOException {
 		// TODO Auto-generated method stub
+		this.sm =sm;
 		im = new GenericInputManager();
 		setupNetworking();
 		// make skybox
@@ -140,8 +141,12 @@ public class chainedGame extends VariableFrameRateGame{
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
 		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f,0f,0f);
-;		Avatar playerA = new Avatar(protClient.getID(), playerApos);
+		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
+		
+		Vector3f ghostApos = (Vector3f)Vector3f.createFrom(0f,0f,0f);
+		GhostAvatar ghostA = new GhostAvatar(protClient.getID(), ghostApos);
+		//addGhostAvatarToGameWorld(ghostA);
 		
 	}
 
