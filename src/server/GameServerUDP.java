@@ -54,12 +54,19 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 				UUID ghostID = UUID.fromString(msgTokens[1]);
 				UUID avatarID = UUID.fromString(msgTokens[2]);
 				String[] position = {msgTokens[3],msgTokens[4],msgTokens[5]};
-				sendDetailsMessage(ghostID, avatarID, position);//Tell the details for a particular client
+				sendDetailsMessages(ghostID, avatarID, position);//Tell the details for a particular client
 			}
 			
 			//server receives a MOVE message
 			if(msgTokens[0].compareTo("move") == 0) {
 				// CODE HERE
+			}
+			
+			//server receives a WANTS DETAILS FOR message
+			if (msgTokens[0].compareTo("wsds") == 0) {
+				// format: wsds, senderID
+				UUID senderID = UUID.fromString(msgTokens[1]);
+				sendWantsDetailsMessages(senderID);
 			}
 		}// main if
 		
@@ -106,8 +113,15 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 		
 	}
 
-	private void sendDetailsMessages(UUID clientID) {
-		// TODO Auto-generated method stub
+	private void sendDetailsMessages(UUID ghostID, UUID avatarID, String[] position) {
+		// format: dsfr, ghostID(who to send to), avatarID(who's info is sent),  x,y,z
+		try {
+			String message = new String ("dsfr," + avatarID.toString());
+			message += "," + position[0];
+			message += "," + position[1];
+			message += "," + position[2];
+			sendPacket(message, ghostID);
+		}catch(IOException e) {e.printStackTrace();}
 		
 	}
 	

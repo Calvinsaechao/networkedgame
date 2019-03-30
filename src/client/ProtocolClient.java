@@ -63,17 +63,27 @@ public class ProtocolClient extends GameConnectionClient{
 							}
 					}
 					if(msgTokens[0].compareTo("wsds") == 0){//wants details
-						//format : wsds, 
+						//format : wsds, senderID
 						Vector3 playerPosition = game.getPlayerPosition();//Get the players position
-						UUID avatarID = UUID.fromString(msgTokens[1]);
-						sendDetailsForMessage(avatarID, playerPosition);//Send details of the player position to the server
+						UUID ghostID = UUID.fromString(msgTokens[1]);
+						//UUID avatarID = id;
+						sendDetailsForMessage(ghostID, playerPosition);//Send details of the player position to the server
 					}
 					if(msgTokens[0].compareTo("move") == 0) {
-						//format: move, 
-						
+						//format: move, ghostID, x,y,z
+						UUID ghostID = UUID.fromString(msgTokens[1]);
+						Vector3 ghostPosition = Vector3f.createFrom(
+								Float.parseFloat(msgTokens[2]), 
+								Float.parseFloat(msgTokens[3]),
+								Float.parseFloat(msgTokens[4]));
+						updateAvatarPosition(ghostID, ghostPosition);
 					}
 					//add more messages
 				}
+			}
+			private void updateAvatarPosition(UUID ghostID, Vector3 ghostPosition) {
+				game.updateGhostAvatarPosition(id, ghostPosition);
+				
 			}
 			public void sendJoinMessage() {
 				try {
@@ -82,10 +92,10 @@ public class ProtocolClient extends GameConnectionClient{
 				}
 			}
 	
-			public void sendDetailsForMessage(UUID avatarID, Vector3 playerPosition) {
-				// format: dsfr, localId, x, y, z
+			public void sendDetailsForMessage(UUID ghostID, Vector3 playerPosition) {
+				// format: dsfr, ghostID, avatarID, x, y, z
 				try {
-					String message = new String("dsfr," + id.toString());
+					String message = new String("dsfr," + ghostID.toString() + "," + id.toString());
 					message += "," + playerPosition.x() +"," + playerPosition.y() + "," + playerPosition.z();
 					sendPacket(message);
 				} catch (IOException e) { e.printStackTrace();}
@@ -120,6 +130,9 @@ public class ProtocolClient extends GameConnectionClient{
 				try {
 					sendPacket(message);
 				} catch (IOException e) {e.printStackTrace();}	
+			}
+			public UUID getID() {
+				return id;
 			}
 }
 
