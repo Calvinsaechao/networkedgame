@@ -32,12 +32,14 @@ public class ProtocolClient extends GameConnectionClient{
 				if(msgTokens.length > 0) {
 					if(msgTokens[0].compareTo("join") == 0) {
 						//format: join, success or join, failure
-						if(msgTokens[1].compareTo("sucess") == 0) {
+						if(msgTokens[1].compareTo("success") == 0) {
 							game.setIsConnected(true);
 							sendCreateMessage(game.getPlayerPosition());
+							System.out.println(id.toString()+", you have joined successfully.");
 						}
 						if(msgTokens[1].compareTo("failure") == 0) {
 							game.setIsConnected(false);
+							System.out.println(id.toString()+", you have failed to join.");
 						}
 					}
 					
@@ -115,6 +117,7 @@ public class ProtocolClient extends GameConnectionClient{
 				GhostAvatar avatar = new GhostAvatar(ghostID, ghostPosition);
 				try {
 					game.addGhostAvatarToGameWorld(avatar);
+					System.out.println("Ghost added");
 				} catch(IOException e) { e.printStackTrace();
 				}
 			}

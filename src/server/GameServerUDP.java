@@ -28,7 +28,7 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					UUID clientID = UUID.fromString(msgTokens[1]);
 					addClient(ci, clientID);
 					sendJoinedMessage(clientID, true);
-					System.out.println("join msg");
+					System.out.println(clientID.toString() +" has connected.");
 				}catch(IOException e) {e.printStackTrace();}
 			}
 			
