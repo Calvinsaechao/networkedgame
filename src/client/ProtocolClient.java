@@ -127,13 +127,23 @@ public class ProtocolClient extends GameConnectionClient{
 			
 			public void createGhostAvatar(UUID ghostID, Vector3 ghostPosition) {
 				GhostAvatar avatar = new GhostAvatar(ghostID, ghostPosition);
-				if(!ghostAvatars.contains(avatar)) {
+				if(!ghostExists(ghostID)) {
 					try {
 						game.addGhostAvatarToGameWorld(avatar);
 						System.out.println("Ghost added");
 					} catch(IOException e) { e.printStackTrace();
 					}
 				}
+			}
+			
+			private boolean ghostExists(UUID id) {
+				Iterator<GhostAvatar> it = ghostAvatars.iterator();
+				while(it.hasNext()) {
+					if (id.toString().equalsIgnoreCase((it.next()).getID().toString())) {
+						return true;
+					}
+				}
+				return false;
 			}
 			
 			public void removeGhostAvatar(UUID ghostID) {

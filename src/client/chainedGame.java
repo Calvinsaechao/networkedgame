@@ -65,6 +65,7 @@ public class chainedGame extends VariableFrameRateGame{
 		this.serverAddress = serverAddr;
 		this.serverPort = sPort;
 		this.serverProtocol = ProtocolType.UDP;
+		scriptFile1 = new File("client/setGhostParams.js");
 		
 	}
 	
@@ -166,13 +167,14 @@ public class chainedGame extends VariableFrameRateGame{
 		plight.setSpecular(new Color(1.0f,1.0f,1.0f));
 		plight.setRange(60f);
 		
+		/*
 		//Script Engine
 		ScriptEngineManager factory = new ScriptEngineManager();
 		scriptFile1 = new File("setGhostParams.js"); 	
 		List <ScriptEngineFactory> list = factory.getEngineFactories();
 		jsEngine = factory.getEngineByName("js");
 		this.executeScript(jsEngine, scriptFile1);
-		
+		*/
 		//Lights
 		SceneNode plightNode = sm.getRootSceneNode().createChildSceneNode("plightNode");
 		plightNode.attachObject(plight);
@@ -183,9 +185,6 @@ public class chainedGame extends VariableFrameRateGame{
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
-		Vector3f ghostApos = (Vector3f) jsEngine.get("ghostPos");
-		GhostAvatar ghostA = new GhostAvatar(protClient.getID(), ghostApos);
-		//addGhostAvatarToGameWorld(ghostA);
 		
 		setupInputs();
 	}
@@ -264,13 +263,21 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
+		//Script Engine
+				ScriptEngineManager factory = new ScriptEngineManager();
+				scriptFile1 = new File("client/setGhostParams.js"); 	
+				List <ScriptEngineFactory> list = factory.getEngineFactories();
+				jsEngine = factory.getEngineByName("js");
+				this.executeScript(jsEngine, scriptFile1);
 		if (avatar != null) {  
 			Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
 			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(avatar.getID().toString());
 			ghostN.attachObject(ghostE);
-			//ghostN.setLocalPosition(0, 0, 0);
-			ghostN.setLocalPosition((float)jsEngine.get("x"),(float)jsEngine.get("y"),(float)jsEngine.get("z") );
+			ghostN.setLocalPosition(0, 0, 0);
+			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
+			ghostN.scale(Vector3f.createFrom(scale,scale,scale));
+			//ghostN.setLocalPosition((float)jsEngine.get("x"),(float)jsEngine.get("y"),(float)jsEngine.get("z") );
 			avatar.setNode(ghostN);
 			avatar.setEntity(ghostE);
 			protClient.addGhostAvatar(avatar);
