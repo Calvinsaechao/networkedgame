@@ -4,12 +4,12 @@ import java.awt.Color;
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.*;
 
 import ActionClasses.*;
 import ray.input.GenericInputManager;
@@ -36,12 +36,21 @@ import ray.rage.scene.SceneManager;
 import ray.rage.scene.SceneNode;
 import ray.rage.scene.SkyBox;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import java.io.*;
+
 public class chainedGame extends VariableFrameRateGame{
 	GL4RenderSystem rs;
 	float elapsTime = 0.0f;
 	private GenericInputManager im;
 	private SceneManager sm;
 	private static final String SKYBOX_NAME = "SkyBox";
+	private ScriptEngine jsEngine;
+	private File scriptFile1;
+	private long fileLastModifiedTime;
 	
 	//client/server
 	private String serverAddress;
@@ -56,10 +65,21 @@ public class chainedGame extends VariableFrameRateGame{
 		this.serverAddress = serverAddr;
 		this.serverPort = sPort;
 		this.serverProtocol = ProtocolType.UDP;
+		
 	}
 	
 	public static void main(String[] args) {
 		Game game = new chainedGame(args[0], Integer.parseInt(args[1]));
+		
+		
+		/*
+		System.out.println("Script Engine factories found: ");
+		for(ScriptEngineFactory f:list) {
+			System.out.println("Name = " + f.getEngineName() 
+								+ " language = " + f.getLanguageName()
+								+ " extensions = " + f.getExtensions()); 
+		}	*/
+		
 		try {
 			game.startup();
 			game.run();
@@ -90,6 +110,22 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 	}
 	
+	private void executeScript(ScriptEngine engine, File scriptFileName) {
+		try
+		{ FileReader fileReader = new FileReader(scriptFileName);
+		  engine.eval(fileReader);
+		  fileLastModifiedTime = scriptFile1.lastModified();
+		  fileReader.close();}
+		catch(FileNotFoundException e1)
+		{System.out.println(scriptFileName + " not found " + e1);}
+		catch(IOException e2)
+		{System.out.println("IO problem with " + scriptFileName + e2);}
+		catch(ScriptException e3)
+		{System.out.println("Script Exception in " + scriptFileName + e3);}
+		catch(NullPointerException e4)
+		{System.out.println("Null ptr exception in " + scriptFileName + e4);}
+		
+	}
 	@Override
 	protected void setupWindow(RenderSystem rs, GraphicsEnvironment ge) {
 		rs.createRenderWindow(new DisplayMode(1000,700,24,60), false);
@@ -106,15 +142,6 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode rootNode = sm.getRootSceneNode();
 		Camera camera = sm.createCamera("MainCamera", Projection.PERSPECTIVE);
 		rw.getViewport(0).setCamera(camera);
-		
-	
-		/*
-		camera.setRt((Vector3f)Vector3f.createFrom(1.0f, 0.0f, 0.0f));
-		camera.setUp((Vector3f)Vector3f.createFrom(0.0f, 1.0f, 0.0f));
-		camera.setFd((Vector3f)Vector3f.createFrom(0.0f, 0.0f, 1.0f));
-		camera.setPo((Vector3f)Vector3f.createFrom(0.0f, 0.0f, 0.0f));
-		*/
-		
 		SceneNode cameraNode = rootNode.createChildSceneNode(camera.getName() + "Node");
 		cameraNode.attachObject(camera);
 		camera.setMode('n');
@@ -131,7 +158,7 @@ public class chainedGame extends VariableFrameRateGame{
 		// make skybox
 		makeSkybox(eng,sm);
 		// make terrain
-		// make avatars
+		
 		sm.getAmbientLight().setIntensity(new Color(.3f, .3f, .3f));
 		Light plight=sm.createLight("testLamp1", Light.Type.POINT);
 		plight.setAmbient(new Color(.1f,.1f,.1f));
@@ -139,15 +166,24 @@ public class chainedGame extends VariableFrameRateGame{
 		plight.setSpecular(new Color(1.0f,1.0f,1.0f));
 		plight.setRange(60f);
 		
+		//Script Engine
+		ScriptEngineManager factory = new ScriptEngineManager();
+		scriptFile1 = new File("setGhostParams.js"); 	
+		List <ScriptEngineFactory> list = factory.getEngineFactories();
+		jsEngine = factory.getEngineByName("js");
+		this.executeScript(jsEngine, scriptFile1);
+		
+		//Lights
 		SceneNode plightNode = sm.getRootSceneNode().createChildSceneNode("plightNode");
 		plightNode.attachObject(plight);
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
+		// make avatars
 		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f,0f,0f);
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
-		Vector3f ghostApos = (Vector3f)Vector3f.createFrom(0f,0f,0f);
+		Vector3f ghostApos = (Vector3f) jsEngine.get("ghostPos");
 		GhostAvatar ghostA = new GhostAvatar(protClient.getID(), ghostApos);
 		//addGhostAvatarToGameWorld(ghostA);
 		
@@ -171,12 +207,16 @@ public class chainedGame extends VariableFrameRateGame{
 
 	@Override
 	protected void update(Engine engine) {
-		// TODO Auto-generated method stub
 		rs = (GL4RenderSystem) engine.getRenderSystem();
 		SceneManager sm = engine.getSceneManager();
 		elapsTime += engine.getElapsedTimeMillis();
-		im.update(elapsTime);
 		processNetworking(elapsTime, sm);
+		long modTime = scriptFile1.lastModified();
+		if(modTime > fileLastModifiedTime) {
+			fileLastModifiedTime = modTime;
+			this.executeScript(jsEngine, scriptFile1);
+		}
+		im.update(elapsTime);
  	}
 	
 	protected void processNetworking(float elapsTime, SceneManager sm) {
@@ -227,15 +267,15 @@ public class chainedGame extends VariableFrameRateGame{
 		if (avatar != null) {  
 			Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
-			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(
-					avatar.getID().toString());
+			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(avatar.getID().toString());
 			ghostN.attachObject(ghostE);
-					ghostN.setLocalPosition(0, 0, 0);
-					avatar.setNode(ghostN);
-					avatar.setEntity(ghostE);
-					protClient.addGhostAvatar(avatar);
-					//avatar.setPosition(0, 0, 0);
-					} 
+			//ghostN.setLocalPosition(0, 0, 0);
+			ghostN.setLocalPosition((float)jsEngine.get("x"),(float)jsEngine.get("y"),(float)jsEngine.get("z") );
+			avatar.setNode(ghostN);
+			avatar.setEntity(ghostE);
+			protClient.addGhostAvatar(avatar);
+			//avatar.setPosition(0, 0, 0);
+		} 
 	}
 	
 	public void addAvatarToGameWorld(Avatar avatar, SceneManager sm) throws IOException{
