@@ -136,6 +136,13 @@ public class ProtocolClient extends GameConnectionClient{
 				}
 			}
 			
+			public void scaleGhostAvatars(float scale) {
+				Iterator<GhostAvatar> it = ghostAvatars.iterator();
+				while(it.hasNext()) {
+					it.next().scale(scale);
+				}
+			}
+			
 			private boolean ghostExists(UUID id) {
 				Iterator<GhostAvatar> it = ghostAvatars.iterator();
 				while(it.hasNext()) {

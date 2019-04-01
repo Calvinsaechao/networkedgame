@@ -5,6 +5,7 @@ import java.util.UUID;
 import ray.rage.scene.Entity;
 import ray.rage.scene.SceneNode;
 import ray.rml.Vector3;
+import ray.rml.Vector3f;
 
 public class GhostAvatar {
 	private UUID id;
@@ -25,6 +26,10 @@ public class GhostAvatar {
 	
 	public void setEntity(Entity entity) {
 		this.entity = entity;
+	}
+	
+	public void scale(float scale) {
+		node.scale(Vector3f.createFrom(scale,scale,scale));
 	}
 	
 	public void setPosition(float x, float y, float z) {
