@@ -11,7 +11,10 @@ import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
 
+import ActionClasses.*;
 import ray.input.GenericInputManager;
+import ray.input.InputManager;
+import ray.input.action.Action;
 import ray.networking.IGameConnection.ProtocolType;
 import ray.rage.Engine;
 import ray.rage.asset.texture.Texture;
@@ -148,6 +151,22 @@ public class chainedGame extends VariableFrameRateGame{
 		GhostAvatar ghostA = new GhostAvatar(protClient.getID(), ghostApos);
 		//addGhostAvatarToGameWorld(ghostA);
 		
+		setupInputs();
+	}
+	
+	protected void setupInputs() {
+		im = new GenericInputManager();
+		String kbName = im.getKeyboardName();
+		
+		SceneNode AvatarN = sm.getSceneNode("playerNode");
+		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient);
+		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
+		im.associateAction(kbName,
+				net.java.games.input.Component.Identifier.Key.W,
+				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		im.associateAction(kbName,
+				net.java.games.input.Component.Identifier.Key.S,
+				moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 	}
 
 	@Override
@@ -157,7 +176,6 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneManager sm = engine.getSceneManager();
 		elapsTime += engine.getElapsedTimeMillis();
 		im.update(elapsTime);
-		
 		processNetworking(elapsTime, sm);
  	}
 	
@@ -207,7 +225,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
 		if (avatar != null) {  
-			Entity ghostE = sm.createEntity("ghost", "cube.obj");
+			Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
 			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(
 					avatar.getID().toString());
@@ -215,6 +233,7 @@ public class chainedGame extends VariableFrameRateGame{
 					ghostN.setLocalPosition(0, 0, 0);
 					avatar.setNode(ghostN);
 					avatar.setEntity(ghostE);
+					protClient.addGhostAvatar(avatar);
 					//avatar.setPosition(0, 0, 0);
 					} 
 	}
@@ -239,8 +258,9 @@ public class chainedGame extends VariableFrameRateGame{
 		isClientConnected = bool;
 	}
 	
-	public void updateGhostAvatarPosition(UUID ghostID, Vector3 ghostPosition) {
-		SceneNode ghostN = sm.getSceneNode(ghostID.toString());
-		ghostN.setLocalPosition(ghostPosition);// not sure
+	public void updateGhostAvatarPosition(GhostAvatar ghostAvatar, Vector3 ghostPosition) {
+		ghostAvatar.setPosition(ghostPosition.x(),
+				ghostPosition.y(),
+				ghostPosition.z());
 	}
 }

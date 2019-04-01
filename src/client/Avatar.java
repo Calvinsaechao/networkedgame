@@ -26,7 +26,6 @@ public class Avatar {
 	public void setEntity(Entity entity) {
 		this.entity = entity;
 	}
-	
 	public void setPosition(float x, float y, float z) {
 		node.setLocalPosition(x, y, z);
 	}

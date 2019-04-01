@@ -60,7 +60,10 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 			
 			//server receives a MOVE message
 			if(msgTokens[0].compareTo("move") == 0) {
-				// CODE HERE
+				//format: move, ghostID, x, y, z
+				UUID ghostID = UUID.fromString(msgTokens[1]);
+				String[] pos = {msgTokens[2], msgTokens[3], msgTokens[4]};
+				sendMoveMessages(ghostID, pos);
 			}
 			
 			//server receives a WANTS DETAILS FOR message

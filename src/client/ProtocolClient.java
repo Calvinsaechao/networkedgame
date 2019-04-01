@@ -3,9 +3,11 @@ package client;
 import ray.networking.IGameConnection.ProtocolType;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.Vector;
 
+import java.util.Iterator;
 import javax.vecmath.Vector3d;
 
 import ray.networking.client.GameConnectionClient;
@@ -15,14 +17,14 @@ import ray.rml.Vector3f;
 public class ProtocolClient extends GameConnectionClient{
 	private chainedGame game;
 	private UUID id;
-	private Vector<GhostAvatar> ghostAvatars;
+	private ArrayList<GhostAvatar> ghostAvatars;
 	
 	public ProtocolClient(InetAddress remAddr, int remPort,
 			ProtocolType pType, chainedGame game) throws IOException{
 				super(remAddr, remPort, pType);
 				this.game=game;
 				this.id=UUID.randomUUID();
-				this.ghostAvatars = new Vector<GhostAvatar>();
+				this.ghostAvatars = new ArrayList<GhostAvatar>();
 			}
 			@Override
 			protected void processPacket(Object o) {
@@ -60,7 +62,6 @@ public class ProtocolClient extends GameConnectionClient{
 							try {
 								createGhostAvatar(ghostID, ghostPosition);
 							}	catch (Exception e) {
-								System.out.println("error creating ghost avatar");
 								e.printStackTrace();
 							}
 					}
@@ -83,8 +84,19 @@ public class ProtocolClient extends GameConnectionClient{
 					//add more messages
 				}
 			}
+			private GhostAvatar getAvatar(UUID id) {
+				Iterator<GhostAvatar> it = (Iterator<GhostAvatar>)ghostAvatars.iterator();
+				GhostAvatar ghostAvatar = null;
+				while(it.hasNext()) {
+					ghostAvatar = it.next();
+					if (ghostAvatar.getID().compareTo(id) == 0) {
+						return ghostAvatar;
+					}
+				}
+				return null;
+			}
 			private void updateAvatarPosition(UUID ghostID, Vector3 ghostPosition) {
-				game.updateGhostAvatarPosition(id, ghostPosition);
+				game.updateGhostAvatarPosition(getAvatar(ghostID), ghostPosition);
 				
 			}
 			public void sendJoinMessage() {
@@ -115,10 +127,12 @@ public class ProtocolClient extends GameConnectionClient{
 			
 			public void createGhostAvatar(UUID ghostID, Vector3 ghostPosition) {
 				GhostAvatar avatar = new GhostAvatar(ghostID, ghostPosition);
-				try {
-					game.addGhostAvatarToGameWorld(avatar);
-					System.out.println("Ghost added");
-				} catch(IOException e) { e.printStackTrace();
+				if(!ghostAvatars.contains(avatar)) {
+					try {
+						game.addGhostAvatarToGameWorld(avatar);
+						System.out.println("Ghost added");
+					} catch(IOException e) { e.printStackTrace();
+					}
 				}
 			}
 			
@@ -126,8 +140,12 @@ public class ProtocolClient extends GameConnectionClient{
 				System.out.println("removeGhostAvatar unimplemented");
 			}
 			
+			public void addGhostAvatar(GhostAvatar avatar) {
+				ghostAvatars.add(avatar);
+			}
+			
 			public void sendMoveMessage(Vector3 pos) {
-				// format : move, localId, x, y ,z 
+				// format : move, ghostID, x, y ,z 
 				String message = new String("move," + id.toString());
 				message += "," + pos.x() +"," + pos.y() + "," + pos.z();
 				try {
