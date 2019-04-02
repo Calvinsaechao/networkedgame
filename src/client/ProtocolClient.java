@@ -169,8 +169,13 @@ public class ProtocolClient extends GameConnectionClient{
 					sendPacket(message);
 				} catch (IOException e) {e.printStackTrace();}	
 			}
+			
 			public UUID getID() {
 				return id;
+			}
+			
+			public void sendByeMessage() {
+				
 			}
 }
 
