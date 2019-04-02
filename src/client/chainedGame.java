@@ -67,7 +67,7 @@ public class chainedGame extends VariableFrameRateGame{
 		this.serverAddress = serverAddr;
 		this.serverPort = sPort;
 		this.serverProtocol = ProtocolType.UDP;
-		scriptFile1 = new File("client/setGhostParams.js");
+		scriptFile1 = new File("client\\setGhostParams.js"); //Read up on File Separator
 	}
 	
 	public static void main(String[] args) {
@@ -106,6 +106,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private void executeScript(ScriptEngine engine, File scriptFileName) {
 		try
 		{ FileReader fileReader = new FileReader(scriptFileName);
+		  System.out.println("FileReader directory: " + scriptFileName.getAbsoluteFile());
 		  engine.eval(fileReader);
 		  fileLastModifiedTime = scriptFile1.lastModified();
 		  fileReader.close();}
@@ -170,6 +171,11 @@ public class chainedGame extends VariableFrameRateGame{
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
+		//Script Engine
+		ScriptEngineManager factory = new ScriptEngineManager();	
+		List <ScriptEngineFactory> list = factory.getEngineFactories();
+		jsEngine = factory.getEngineByName("js");
+		this.executeScript(jsEngine, scriptFile1);
 		
 		setupInputs();
 	}
@@ -255,11 +261,8 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
-		//Script Engine
-		ScriptEngineManager factory = new ScriptEngineManager();	
-		List <ScriptEngineFactory> list = factory.getEngineFactories();
-		jsEngine = factory.getEngineByName("js");
-		this.executeScript(jsEngine, scriptFile1);
+		
+		
 		if (avatar != null) {  
 			Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
