@@ -72,16 +72,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public static void main(String[] args) {
 		Game game = new chainedGame(args[0], Integer.parseInt(args[1]));
-		
-		
-		/*
-		System.out.println("Script Engine factories found: ");
-		for(ScriptEngineFactory f:list) {
-			System.out.println("Name = " + f.getEngineName() 
-								+ " language = " + f.getLanguageName()
-								+ " extensions = " + f.getExtensions()); 
-		}	*/
-		
+	
 		try {
 			game.startup();
 			game.run();
@@ -154,35 +145,27 @@ public class chainedGame extends VariableFrameRateGame{
 
 	@Override
 	protected void setupScene(Engine eng, SceneManager sm) throws IOException {
-		// TODO Auto-generated method stub
 		this.sm =sm;
 		im = new GenericInputManager();
 		setupNetworking();
-		// make skybox
+		//-------------Skybox-------------//
 		makeSkybox(eng,sm);
-		// make terrain
 		
+		//-------------Terrain-------------//
+		//UNIMPLEMENTED
+		
+		//-------------Lights-------------//
 		sm.getAmbientLight().setIntensity(new Color(.3f, .3f, .3f));
 		Light plight=sm.createLight("testLamp1", Light.Type.POINT);
 		plight.setAmbient(new Color(.1f,.1f,.1f));
 		plight.setDiffuse(new Color(.8f,.8f,.8f));
 		plight.setSpecular(new Color(1.0f,1.0f,1.0f));
 		plight.setRange(60f);
-		
-		/*
-		//Script Engine
-		ScriptEngineManager factory = new ScriptEngineManager();
-		scriptFile1 = new File("setGhostParams.js"); 	
-		List <ScriptEngineFactory> list = factory.getEngineFactories();
-		jsEngine = factory.getEngineByName("js");
-		this.executeScript(jsEngine, scriptFile1);
-		*/
-		//Lights
 		SceneNode plightNode = sm.getRootSceneNode().createChildSceneNode("plightNode");
 		plightNode.attachObject(plight);
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
-		// make avatars
+		//-------------Avatars-------------//
 		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f,0f,0f);
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
@@ -270,11 +253,11 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
 		//Script Engine
-				ScriptEngineManager factory = new ScriptEngineManager();
-				scriptFile1 = new File("client/setGhostParams.js"); 	
-				List <ScriptEngineFactory> list = factory.getEngineFactories();
-				jsEngine = factory.getEngineByName("js");
-				this.executeScript(jsEngine, scriptFile1);
+		ScriptEngineManager factory = new ScriptEngineManager();
+		scriptFile1 = new File("client/setGhostParams.js"); 	
+		List <ScriptEngineFactory> list = factory.getEngineFactories();
+		jsEngine = factory.getEngineByName("js");
+		this.executeScript(jsEngine, scriptFile1);
 		if (avatar != null) {  
 			Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
@@ -283,11 +266,9 @@ public class chainedGame extends VariableFrameRateGame{
 			ghostN.setLocalPosition(0, 0, 0);
 			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
 			ghostN.scale(Vector3f.createFrom(scale,scale,scale));
-			//ghostN.setLocalPosition((float)jsEngine.get("x"),(float)jsEngine.get("y"),(float)jsEngine.get("z") );
 			avatar.setNode(ghostN);
 			avatar.setEntity(ghostE);
 			protClient.addGhostAvatar(avatar);
-			//avatar.setPosition(0, 0, 0);
 		} 
 	}
 	
@@ -299,10 +280,8 @@ public class chainedGame extends VariableFrameRateGame{
 		playerN.attachObject(playerE);
 		playerN.moveUp(0.3f);
 		playerN.yaw(Degreef.createFrom(180.0f));
-		//playerN.setLocalPosition(0,0,0);
 		avatar.setNode(playerN);
 		avatar.setEntity(playerE);
-		//avatar.setPosition(0, 0, 0);
 		}
 		
 	}
@@ -325,7 +304,6 @@ public class chainedGame extends VariableFrameRateGame{
 
 		@Override
 		public void performAction(float time, Event evt) {
-			// TODO Auto-generated method stub
 			if(protClient != null && isClientConnected == true) {
 				protClient.sendByeMessage();
 			}
