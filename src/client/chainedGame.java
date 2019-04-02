@@ -12,8 +12,10 @@ import java.util.Vector;
 import java.util.*;
 
 import ActionClasses.*;
+import net.java.games.input.Event;
 import ray.input.GenericInputManager;
 import ray.input.InputManager;
+import ray.input.action.AbstractInputAction;
 import ray.input.action.Action;
 import ray.networking.IGameConnection.ProtocolType;
 import ray.rage.Engine;
@@ -313,5 +315,16 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void removeGhostAvatarFromGameWorld(GhostAvatar avatar) {
 		if(avatar != null) gameObjectsToRemove.add(avatar.getID());
+	}
+	
+	private class SendCloseConnectionPacketAction extends AbstractInputAction {
+
+		@Override
+		public void performAction(float time, Event evt) {
+			// TODO Auto-generated method stub
+			if(protClient != null && isClientConnected == true) {
+				protClient.sendByeMessage();
+			}
+		}
 	}
 }
