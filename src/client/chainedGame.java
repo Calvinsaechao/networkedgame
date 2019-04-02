@@ -201,8 +201,11 @@ public class chainedGame extends VariableFrameRateGame{
 		processNetworking(elapsTime, sm);
 		long modTime = scriptFile1.lastModified();
 		if(modTime > fileLastModifiedTime) {
+			System.out.println("Updating file: " + scriptFile1.toString());
 			fileLastModifiedTime = modTime;
 			this.executeScript(jsEngine, scriptFile1);
+			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
+			protClient.scaleGhostAvatars(scale);
 		}
 		im.update(elapsTime);
  	}
@@ -253,8 +256,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
 		//Script Engine
-		ScriptEngineManager factory = new ScriptEngineManager();
-		scriptFile1 = new File("client/setGhostParams.js"); 	
+		ScriptEngineManager factory = new ScriptEngineManager();	
 		List <ScriptEngineFactory> list = factory.getEngineFactories();
 		jsEngine = factory.getEngineByName("js");
 		this.executeScript(jsEngine, scriptFile1);
