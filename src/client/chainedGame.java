@@ -68,7 +68,6 @@ public class chainedGame extends VariableFrameRateGame{
 		this.serverPort = sPort;
 		this.serverProtocol = ProtocolType.UDP;
 		scriptFile1 = new File("client/setGhostParams.js");
-		
 	}
 	
 	public static void main(String[] args) {
@@ -126,7 +125,8 @@ public class chainedGame extends VariableFrameRateGame{
 		catch(ScriptException e3)
 		{System.out.println("Script Exception in " + scriptFileName + e3);}
 		catch(NullPointerException e4)
-		{System.out.println("Null ptr exception in " + scriptFileName + e4);}
+		{System.out.println("Null ptr exception in " + scriptFileName +" " + e4);
+		e4.printStackTrace();}
 		
 	}
 	@Override

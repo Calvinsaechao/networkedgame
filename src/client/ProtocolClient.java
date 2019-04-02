@@ -175,7 +175,12 @@ public class ProtocolClient extends GameConnectionClient{
 			}
 			
 			public void sendByeMessage() {
-				
+				//format: bye, clientID
+				String message = "bye,";
+				message += id.toString();
+				try {
+					sendPacket(message);
+				} catch (IOException e) {e.printStackTrace();}	
 			}
 }
 
