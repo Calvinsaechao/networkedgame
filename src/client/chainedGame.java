@@ -198,12 +198,16 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
 		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient);
 		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
+		Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
 		im.associateAction(kbName,
 				net.java.games.input.Component.Identifier.Key.W,
 				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 		im.associateAction(kbName,
 				net.java.games.input.Component.Identifier.Key.S,
 				moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+		im.associateAction(kbName,
+				net.java.games.input.Component.Identifier.Key.ESCAPE,
+				sendCloseConPckAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
 	}
 
 	@Override
