@@ -310,4 +310,8 @@ public class chainedGame extends VariableFrameRateGame{
 				ghostPosition.y(),
 				ghostPosition.z());
 	}
+	
+	public void removeGhostAvatarFromGameWorld(GhostAvatar avatar) {
+		if(avatar != null) gameObjectsToRemove.add(avatar.getID());
+	}
 }
