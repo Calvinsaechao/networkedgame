@@ -50,13 +50,26 @@ public class Camera3PController {
 	 private void setupInput(InputManager im){
     	Action orbitAAction = new OrbitRightAction(this);// pass controller
     	Action orbitALction = new OrbitLeftAction(this);
-    	//Action orbitEAction = new OrbitElevationAction(this);
+    	Action orbitUpAction = new OrbitUpAction(this);
+    	Action orbitDownAction = new OrbitDownAction(this);
     	ArrayList<Controller> controllers = im.getControllers();
     	for (Controller c : controllers) {
     		if (c.getType() == Controller.Type.KEYBOARD) {
     			System.out.println ("keyboard found");
-     			 im.associateAction(c, net.java.games.input.Component.Identifier.Key.RIGHT, orbitAAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-     			 im.associateAction(c, net.java.games.input.Component.Identifier.Key.LEFT, orbitALction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+     			 im.associateAction(c, 
+     					 net.java.games.input.Component.Identifier.Key.RIGHT, 
+     					 orbitAAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+     			 im.associateAction(c,
+     					 net.java.games.input.Component.Identifier.Key.LEFT, 
+     					 orbitALction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+     			im.associateAction(c,
+    					 net.java.games.input.Component.Identifier.Key.UP, 
+    					 orbitUpAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+     			im.associateAction(c,
+    					 net.java.games.input.Component.Identifier.Key.DOWN, 
+    					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+    			 
+    			 
     		}
     	}
 	  }

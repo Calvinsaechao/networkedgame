@@ -9,7 +9,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 import ActionClasses.*;
-import ActionClasses.Camera3PController;
 import net.java.games.input.Controller;
 import net.java.games.input.Event;
 import ray.input.GenericInputManager;
@@ -193,6 +192,8 @@ public class chainedGame extends VariableFrameRateGame{
 		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
 		Action orbitAroundAction = new OrbitRightAction(orbitController);
 		Action orbitLeftAction = new OrbitLeftAction(orbitController);
+		Action orbitUpAction = new OrbitUpAction(orbitController);
+    	Action orbitDownAction = new OrbitDownAction(orbitController);
 		Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
 		for (Controller c : controllers) {
    		 if (c.getType() == Controller.Type.KEYBOARD) {
@@ -211,6 +212,12 @@ public class chainedGame extends VariableFrameRateGame{
 			 im.associateAction(c, 
 					 net.java.games.input.Component.Identifier.Key.LEFT,
 					 orbitLeftAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+			 im.associateAction(c,
+					 net.java.games.input.Component.Identifier.Key.UP, 
+					 orbitUpAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+ 			im.associateAction(c,
+					 net.java.games.input.Component.Identifier.Key.DOWN, 
+					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    		 }
 		}
 	}

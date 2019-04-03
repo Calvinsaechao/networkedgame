@@ -6,4 +6,4 @@
 		Packages.ray.rml.Vector3f);
 */
 
-	var scale = 1.5;
+	var scale = 0.3;
