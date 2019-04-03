@@ -215,13 +215,13 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	//-------------Orbit Camera-------------//
 	
-			protected void setupOrbitCameras(Engine eng, SceneManager sm) {
-				SceneNode avatarN = sm.getSceneNode("playerNode");
-		    	SceneNode cameraN = sm.getSceneNode("MainCameraNode");
-		    	Camera camera = sm.getCamera("MainCamera");
-		    	camera.setMode('n');
-		    	orbitController = new Camera3PController(camera, cameraN, avatarN, im);
-			}
+	protected void setupOrbitCameras(Engine eng, SceneManager sm) {
+		SceneNode avatarN = sm.getSceneNode("playerNode");
+    	SceneNode cameraN = sm.getSceneNode("MainCameraNode");
+    	Camera camera = sm.getCamera("MainCamera");
+    	camera.setMode('n');
+    	orbitController = new Camera3PController(camera, cameraN, avatarN, im);
+	}
 
 	@Override
 	protected void update(Engine engine) {
