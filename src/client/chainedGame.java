@@ -178,6 +178,7 @@ public class chainedGame extends VariableFrameRateGame{
 		this.executeScript(jsEngine, scriptFile1);
 		
 		setupInputs();
+		setupOrbitCameras(eng, sm);
 	}
 	
 	
