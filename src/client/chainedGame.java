@@ -6,12 +6,11 @@ import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Iterator;
-import java.util.UUID;
-import java.util.Vector;
 import java.util.*;
 
 import ActionClasses.*;
+import ActionClasses.Camera3PController;
+import net.java.games.input.Controller;
 import net.java.games.input.Event;
 import ray.input.GenericInputManager;
 import ray.input.InputManager;
@@ -53,6 +52,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private ScriptEngine jsEngine;
 	private File scriptFile1;
 	private long fileLastModifiedTime;
+	private Camera3PController orbitController;
 	
 	//client/server
 	private String serverAddress;
@@ -180,24 +180,48 @@ public class chainedGame extends VariableFrameRateGame{
 		setupInputs();
 	}
 	
+	
+	
 	protected void setupInputs() {
 		im = new GenericInputManager();
-		String kbName = im.getKeyboardName();
+		ArrayList<Controller> controllers = im.getControllers();
+		//String kbName = im.getKeyboardName();
 		
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
 		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient);
 		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
+		Action orbitAroundAction = new OrbitAroundAction(orbitController);
 		Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
-		im.associateAction(kbName,
+		for (Controller c : controllers) {
+   		 if (c.getType() == Controller.Type.KEYBOARD) {
+   			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.W,
 				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateAction(kbName,
+   			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.S,
 				moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-		im.associateAction(kbName,
+   			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.ESCAPE,
 				sendCloseConPckAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+   			im.associateAction(c, 
+   					net.java.games.input.Component.Identifier.Key.RIGHT,
+   					orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+			 im.associateAction(c, 
+					 net.java.games.input.Component.Identifier.Key.LEFT,
+					 orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+   		 }
+		}
 	}
+	
+	//-------------Orbit Camera-------------//
+	
+			protected void setupOrbitCameras(Engine eng, SceneManager sm) {
+				SceneNode avatarN = sm.getSceneNode("playerNode");
+		    	SceneNode cameraN = sm.getSceneNode("MainCameraNode");
+		    	Camera camera = sm.getCamera("MainCamera");
+		    	camera.setMode('n');
+		    	orbitController = new Camera3PController(camera, cameraN, avatarN, im);
+			}
 
 	@Override
 	protected void update(Engine engine) {
