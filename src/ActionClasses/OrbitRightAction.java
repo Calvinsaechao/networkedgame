@@ -7,11 +7,11 @@ import ray.input.action.AbstractInputAction;
 import ray.rage.scene.Camera;
 import ray.rage.scene.SceneNode;
 
-public class OrbitAroundAction extends AbstractInputAction {
+public class OrbitRightAction extends AbstractInputAction {
 
 	private Camera3PController controller;
 	
-	public OrbitAroundAction(Camera3PController ctrl) {
+	public OrbitRightAction(Camera3PController ctrl) {
 		controller = ctrl;
 		System.out.println("Orbit action constructor executed");
 

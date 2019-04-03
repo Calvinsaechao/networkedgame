@@ -191,7 +191,8 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
 		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient);
 		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
-		Action orbitAroundAction = new OrbitAroundAction(orbitController);
+		Action orbitAroundAction = new OrbitRightAction(orbitController);
+		Action orbitLeftAction = new OrbitLeftAction(orbitController);
 		Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
 		for (Controller c : controllers) {
    		 if (c.getType() == Controller.Type.KEYBOARD) {
@@ -209,7 +210,7 @@ public class chainedGame extends VariableFrameRateGame{
    					orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 			 im.associateAction(c, 
 					 net.java.games.input.Component.Identifier.Key.LEFT,
-					 orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+					 orbitLeftAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    		 }
 		}
 	}
