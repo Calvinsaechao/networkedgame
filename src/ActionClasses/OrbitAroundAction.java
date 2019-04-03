@@ -5,6 +5,7 @@ import client.ProtocolClient;
 import net.java.games.input.Event;
 import ray.input.action.AbstractInputAction;
 import ray.rage.scene.Camera;
+import ray.rage.scene.SceneNode;
 
 public class OrbitAroundAction extends AbstractInputAction {
 
@@ -21,7 +22,8 @@ public class OrbitAroundAction extends AbstractInputAction {
 
 		float rotAmount, cameraAzimuth;
 		cameraAzimuth = controller.getAzimuth();
-		Camera camera = controller.getCam();
+		//Camera camera = controller.getCam();
+		SceneNode cameraN = controller.getSceneNode();
 		// in game: create getters for azimuth
 		rotAmount= 0.5f; 
 		cameraAzimuth += rotAmount;
