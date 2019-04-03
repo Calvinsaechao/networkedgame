@@ -170,6 +170,10 @@ public class chainedGame extends VariableFrameRateGame{
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
+		//--------Relative Objects--------//
+		makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 1f, -3f));
+		
+		
 		//Script Engine
 		ScriptEngineManager factory = new ScriptEngineManager();	
 		List <ScriptEngineFactory> list = factory.getEngineFactories();
@@ -180,7 +184,13 @@ public class chainedGame extends VariableFrameRateGame{
 		setupOrbitCameras(eng, sm);
 	}
 	
-	
+	protected void makePlanet(SceneManager sm, Vector3 pos) throws IOException {
+		Entity planetE = sm.createEntity("planet", "earth.obj");
+		planetE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode planetN = sm.getRootSceneNode().createChildSceneNode(planetE.getName() +"Node");
+		planetN.attachObject(planetE);
+		planetN.setLocalPosition(pos);
+	}
 	
 	protected void setupInputs() {
 		im = new GenericInputManager();
@@ -247,6 +257,7 @@ public class chainedGame extends VariableFrameRateGame{
 			protClient.scaleGhostAvatars(scale);
 		}
 		im.update(elapsTime);
+		orbitController.updateCameraPosition();
  	}
 	
 	protected void processNetworking(float elapsTime, SceneManager sm) {
