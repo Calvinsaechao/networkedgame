@@ -81,6 +81,10 @@ public class Camera3PController {
 		 return camera;
 	 }
 	 
+	 public SceneNode getSceneNode() {
+		 return cameraN;
+	 }
+	 
 	 public SceneNode getTarget() {
 		 return target;
 	 }
