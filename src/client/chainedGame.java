@@ -35,6 +35,7 @@ import ray.rml.Vector3f;
 import ray.rage.scene.SceneManager;
 import ray.rage.scene.SceneNode;
 import ray.rage.scene.SkyBox;
+import ray.rage.scene.Tessellation;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
@@ -151,9 +152,6 @@ public class chainedGame extends VariableFrameRateGame{
 		//-------------Skybox-------------//
 		makeSkybox(eng,sm);
 		
-		//-------------Terrain-------------//
-		//UNIMPLEMENTED
-		
 		//-------------Lights-------------//
 		sm.getAmbientLight().setIntensity(new Color(.3f, .3f, .3f));
 		Light plight=sm.createLight("testLamp1", Light.Type.POINT);
@@ -170,6 +168,17 @@ public class chainedGame extends VariableFrameRateGame{
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
+		//-------------Terrain-------------//
+		Tessellation tessE = sm.createTessellation("tessE", 6);
+		tessE.setSubdivisions(8f);
+		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("TessN");
+		tessN.attachObject(tessE);
+		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
+		tessN.yaw(Degreef.createFrom(37.2f));
+		tessN.scale(100, 200, 100);
+		tessE.setHeightMap(this.getEngine(), "heightmap.png");
+		tessE.setTexture(this.getEngine(), "grass_tex.jpg");
+		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		//--------Relative Objects--------//
 		makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 1f, -3f));
 		
