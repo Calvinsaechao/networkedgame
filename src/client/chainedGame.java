@@ -25,6 +25,8 @@ import ray.rage.rendersystem.RenderWindow;
 import ray.rage.rendersystem.Renderable.Primitive;
 import ray.rage.rendersystem.Viewport;
 import ray.rage.rendersystem.gl4.GL4RenderSystem;
+import ray.rage.rendersystem.states.RenderState;
+import ray.rage.rendersystem.states.TextureState;
 import ray.rage.scene.Camera;
 import ray.rage.scene.Camera.Frustum.Projection;
 import ray.rage.scene.Entity;
@@ -164,23 +166,26 @@ public class chainedGame extends VariableFrameRateGame{
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
 		//-------------Avatars-------------//
-		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f,0f,0f);
+		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f,0f, 6.0f);
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
 		//-------------Terrain-------------//
-		Tessellation tessE = sm.createTessellation("tessE", 6);
+		Tessellation tessE = sm.createTessellation("tessE", 7);
 		tessE.setSubdivisions(8f);
 		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("TessN");
 		tessN.attachObject(tessE);
 		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
-		tessN.yaw(Degreef.createFrom(37.2f));
-		tessN.scale(100, 200, 100);
+		//tessN.yaw(Degreef.createFrom(37.2f));
+		tessN.scale(400, 800, 400);
 		tessE.setHeightMap(this.getEngine(), "heightmap.png");
-		tessE.setTexture(this.getEngine(), "grass_tex.jpg");
+		tessE.setTexture(this.getEngine(), "grassy.jpg");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
+		
 		//--------Relative Objects--------//
-		makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 1f, -3f));
+		makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
+		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
+		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 1f, -2f));
 		
 		
 		//Script Engine
@@ -201,6 +206,29 @@ public class chainedGame extends VariableFrameRateGame{
 		planetN.setLocalPosition(pos);
 	}
 	
+	protected void makeTree (SceneManager sm, Vector3 pos) throws IOException{
+		Entity treeE = sm.createEntity("tree", "tree.obj");
+		treeE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode treeN = sm.getRootSceneNode().createChildSceneNode(treeE.getName() + "Node");
+		Texture texTree = this.getEngine().getTextureManager().getAssetByPath("tree.png");
+        TextureState texTreeState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+        texTreeState.setTexture(texTree);
+        treeE.setRenderState(texTreeState);
+		treeN.attachObject(treeE);
+		treeN.setLocalPosition(pos);
+	}
+	
+	protected void makeRock (SceneManager sm, Vector3 pos) throws IOException{
+		Entity rockE = sm.createEntity("rock", "rock.obj");
+		rockE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode rockN = sm.getRootSceneNode().createChildSceneNode(rockE.getName() + "Node");
+		Texture texRock = this.getEngine().getTextureManager().getAssetByPath("rock.png");
+        TextureState texRockState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+        texRockState.setTexture(texRock);
+        rockE.setRenderState(texRockState);
+		rockN.attachObject(rockE);
+		rockN.setLocalPosition(pos);
+	}
 	protected void setupInputs() {
 		im = new GenericInputManager();
 		ArrayList<Controller> controllers = im.getControllers();
@@ -209,6 +237,8 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
 		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient);
 		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
+		Action moveRightAction = new MoveRightAction(AvatarN, protClient);
+		Action moveLeftAction = new MoveLeftAction(AvatarN, protClient);
 		Action orbitAroundAction = new OrbitRightAction(orbitController);
 		Action orbitLeftAction = new OrbitLeftAction(orbitController);
 		Action orbitUpAction = new OrbitUpAction(orbitController);
@@ -223,13 +253,19 @@ public class chainedGame extends VariableFrameRateGame{
 				net.java.games.input.Component.Identifier.Key.S,
 				moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
+   					net.java.games.input.Component.Identifier.Key.A,
+   					moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+   			 im.associateAction(c,
+   					net.java.games.input.Component.Identifier.Key.D,
+   					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+   			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.ESCAPE,
 				sendCloseConPckAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
    			im.associateAction(c, 
-   					net.java.games.input.Component.Identifier.Key.RIGHT,
+   					net.java.games.input.Component.Identifier.Key.LEFT,
    					orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 			 im.associateAction(c, 
-					 net.java.games.input.Component.Identifier.Key.LEFT,
+					 net.java.games.input.Component.Identifier.Key.RIGHT,
 					 orbitLeftAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 			 im.associateAction(c,
 					 net.java.games.input.Component.Identifier.Key.UP, 

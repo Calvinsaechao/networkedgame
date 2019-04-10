@@ -56,10 +56,10 @@ public class Camera3PController {
     		if (c.getType() == Controller.Type.KEYBOARD) {
     			System.out.println ("keyboard found");
      			 im.associateAction(c, 
-     					 net.java.games.input.Component.Identifier.Key.RIGHT, 
+     					 net.java.games.input.Component.Identifier.Key.LEFT, 
      					 orbitAAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
      			 im.associateAction(c,
-     					 net.java.games.input.Component.Identifier.Key.LEFT, 
+     					 net.java.games.input.Component.Identifier.Key.RIGHT, 
      					 orbitALction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
      			im.associateAction(c,
     					 net.java.games.input.Component.Identifier.Key.UP, 
