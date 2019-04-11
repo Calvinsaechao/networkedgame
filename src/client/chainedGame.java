@@ -173,19 +173,19 @@ public class chainedGame extends VariableFrameRateGame{
 		//-------------Terrain-------------//
 		Tessellation tessE = sm.createTessellation("tessE", 7);
 		tessE.setSubdivisions(8f);
-		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("TessN");
+		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("tessN");
 		tessN.attachObject(tessE);
 		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
 		//tessN.yaw(Degreef.createFrom(37.2f));
 		tessN.scale(400, 800, 400);
-		tessE.setHeightMap(this.getEngine(), "heightmap.png");
+		tessE.setHeightMap(this.getEngine(), "height_map.png");
 		tessE.setTexture(this.getEngine(), "grassy.jpg");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		
 		//--------Relative Objects--------//
 		makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
-		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
-		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 1f, -2f));
+		makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
+		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 1f, -2f));
 		
 		
 		//Script Engine
@@ -207,13 +207,15 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	protected void makeTree (SceneManager sm, Vector3 pos) throws IOException{
-		Entity treeE = sm.createEntity("tree", "tree.obj");
+		Entity treeE = sm.createEntity("tree", "tree_big.obj");
 		treeE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode treeN = sm.getRootSceneNode().createChildSceneNode(treeE.getName() + "Node");
+		/*
 		Texture texTree = this.getEngine().getTextureManager().getAssetByPath("tree.png");
-        TextureState texTreeState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
-        texTreeState.setTexture(texTree);
+		TextureState texTreeState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texTreeState.setTexture(texTree);
         treeE.setRenderState(texTreeState);
+        */
 		treeN.attachObject(treeE);
 		treeN.setLocalPosition(pos);
 	}
@@ -229,16 +231,33 @@ public class chainedGame extends VariableFrameRateGame{
 		rockN.attachObject(rockE);
 		rockN.setLocalPosition(pos);
 	}
+	
+	public void updateVerticalPosition() {
+		SceneNode avatarN = this.getEngine().getSceneManager().getSceneNode("playerNode");
+		SceneNode tessN = this.getEngine().getSceneManager().getSceneNode("tessN");
+		Tessellation tessE = ((Tessellation)tessN.getAttachedObject("tessE"));
+		
+		// get avatar position relative to plane
+		Vector3 worldAvatarPosition = avatarN.getWorldPosition();
+		Vector3 localAvatarPosition = avatarN.getLocalPosition();
+		
+		// use avatar WORLD coordinates to get coordinates for height
+		Vector3 newAvatarPosition = Vector3f.createFrom(localAvatarPosition.x(),
+														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z()),
+														 localAvatarPosition.z());
+		// use avatar LOCAL coordinates to set position, including height
+		avatarN.setLocalPosition(newAvatarPosition);
+	}
 	protected void setupInputs() {
 		im = new GenericInputManager();
 		ArrayList<Controller> controllers = im.getControllers();
 		//String kbName = im.getKeyboardName();
 		
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
-		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient);
-		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient);
-		Action moveRightAction = new MoveRightAction(AvatarN, protClient);
-		Action moveLeftAction = new MoveLeftAction(AvatarN, protClient);
+		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient, this);
+		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient, this);
+		Action moveRightAction = new MoveRightAction(AvatarN, protClient, this);
+		Action moveLeftAction = new MoveLeftAction(AvatarN, protClient, this);
 		Action orbitAroundAction = new OrbitRightAction(orbitController);
 		Action orbitLeftAction = new OrbitLeftAction(orbitController);
 		Action orbitUpAction = new OrbitUpAction(orbitController);
@@ -253,10 +272,10 @@ public class chainedGame extends VariableFrameRateGame{
 				net.java.games.input.Component.Identifier.Key.S,
 				moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.A,
+   					net.java.games.input.Component.Identifier.Key.D,
    					moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.D,
+   					net.java.games.input.Component.Identifier.Key.A,
    					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.ESCAPE,
