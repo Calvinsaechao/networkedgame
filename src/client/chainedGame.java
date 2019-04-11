@@ -175,7 +175,7 @@ public class chainedGame extends VariableFrameRateGame{
 		tessE.setSubdivisions(8f);
 		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("tessN");
 		tessN.attachObject(tessE);
-		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
+		tessN.translate(Vector3f.createFrom(-6.2f,0f,2.7f));
 		//tessN.yaw(Degreef.createFrom(37.2f));
 		tessN.scale(400, 800, 400);
 		tessE.setHeightMap(this.getEngine(), "height_map.png");
@@ -243,7 +243,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		// use avatar WORLD coordinates to get coordinates for height
 		Vector3 newAvatarPosition = Vector3f.createFrom(localAvatarPosition.x(),
-														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z()),
+														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 1.0f,
 														 localAvatarPosition.z());
 		// use avatar LOCAL coordinates to set position, including height
 		avatarN.setLocalPosition(newAvatarPosition);
