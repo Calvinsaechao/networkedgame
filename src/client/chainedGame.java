@@ -160,13 +160,13 @@ public class chainedGame extends VariableFrameRateGame{
 		plight.setAmbient(new Color(.1f,.1f,.1f));
 		plight.setDiffuse(new Color(.8f,.8f,.8f));
 		plight.setSpecular(new Color(1.0f,1.0f,1.0f));
-		plight.setRange(60f);
+		plight.setRange(100f);
 		SceneNode plightNode = sm.getRootSceneNode().createChildSceneNode("plightNode");
 		plightNode.attachObject(plight);
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
 		//-------------Avatars-------------//
-		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f,0f, 6.0f);
+		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f, 0f, 0f);
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
@@ -175,17 +175,18 @@ public class chainedGame extends VariableFrameRateGame{
 		tessE.setSubdivisions(8f);
 		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("tessN");
 		tessN.attachObject(tessE);
-		tessN.translate(Vector3f.createFrom(-6.2f,0f,2.7f));
+		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
 		//tessN.yaw(Degreef.createFrom(37.2f));
 		tessN.scale(400, 800, 400);
 		tessE.setHeightMap(this.getEngine(), "height_map.png");
-		tessE.setTexture(this.getEngine(), "grassy.jpg");
+		tessE.setTexture(this.getEngine(), "road.png");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		
 		//--------Relative Objects--------//
-		makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
-		makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
-		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 1f, -2f));
+		//makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
+		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
+		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
+		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
 		//Script Engine
@@ -230,6 +231,18 @@ public class chainedGame extends VariableFrameRateGame{
         rockE.setRenderState(texRockState);
 		rockN.attachObject(rockE);
 		rockN.setLocalPosition(pos);
+	}
+	
+	protected void makeRoad (SceneManager sm, Vector3 pos) throws IOException{
+		Entity roadE = sm.createEntity("road", "road.obj");
+		roadE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode roadN = sm.getRootSceneNode().createChildSceneNode(roadE.getName() + "Node");
+		Texture texRoad = this.getEngine().getTextureManager().getAssetByPath("road.jpg");
+        TextureState texRoadState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+        texRoadState.setTexture(texRoad);
+        roadE.setRenderState(texRoadState);
+		roadN.attachObject(roadE);
+		roadN.setLocalPosition(pos);
 	}
 	
 	public void updateVerticalPosition() {

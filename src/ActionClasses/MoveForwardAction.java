@@ -18,7 +18,7 @@ public class MoveForwardAction extends AbstractInputAction{
 	@Override
 	public void performAction(float time, Event e) {
 		System.out.println("Move Forward Action");
-		avN.moveForward(0.01f);
+		avN.moveForward(0.1f);
 		game.updateVerticalPosition();
 		protClient.sendMoveMessage(avN.getWorldPosition());
 	}
