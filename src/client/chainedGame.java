@@ -166,7 +166,7 @@ public class chainedGame extends VariableFrameRateGame{
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
 		//-------------Avatars-------------//
-		Vector3f playerApos = (Vector3f)Vector3f.createFrom(0f, 0f, 0f);
+		Vector3f playerApos = (Vector3f)Vector3f.createFrom(-2.0f, 0f, 204f);
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
 		addAvatarToGameWorld(playerA, sm);
 		
@@ -405,6 +405,7 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
 		playerN.attachObject(playerE);
 		playerN.moveUp(0.3f);
+		playerN.setLocalPosition(-2.0f, 0.0f, 204.0f);
 		playerN.yaw(Degreef.createFrom(180.0f));
 		avatar.setNode(playerN);
 		avatar.setEntity(playerE);
