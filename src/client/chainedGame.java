@@ -186,6 +186,7 @@ public class chainedGame extends VariableFrameRateGame{
 		//makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
 		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
 		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
+		makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, 0f, 200f));
 		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
@@ -231,6 +232,18 @@ public class chainedGame extends VariableFrameRateGame{
         rockE.setRenderState(texRockState);
 		rockN.attachObject(rockE);
 		rockN.setLocalPosition(pos);
+	}
+	
+	protected void makeBox (SceneManager sm, Vector3 pos) throws IOException {
+		Entity boxE = sm.createEntity("box", "box.obj");
+		boxE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode boxN = sm.getRootSceneNode().createChildSceneNode(boxE.getName() + "Node");
+		Texture texBox = this.getEngine().getTextureManager().getAssetByPath("box.png");
+		TextureState texBoxState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texBoxState.setTexture(texBox);
+		boxE.setRenderState(texBoxState);
+		boxN.attachObject(boxE);
+		boxN.setLocalPosition(pos);
 	}
 	
 	protected void makeRoad (SceneManager sm, Vector3 pos) throws IOException{
