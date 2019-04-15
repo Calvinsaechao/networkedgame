@@ -276,6 +276,8 @@ public class chainedGame extends VariableFrameRateGame{
 		Action orbitUpAction = new OrbitUpAction(orbitController);
     	Action orbitDownAction = new OrbitDownAction(orbitController);
 		Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
+		Action turnAction = new TurnAction(AvatarN, protClient,this);
+		
 		for (Controller c : controllers) {
    		 if (c.getType() == Controller.Type.KEYBOARD) {
    			 im.associateAction(c,
@@ -305,6 +307,12 @@ public class chainedGame extends VariableFrameRateGame{
  			im.associateAction(c,
 					 net.java.games.input.Component.Identifier.Key.DOWN, 
 					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+ 			im.associateAction(c,
+					 net.java.games.input.Component.Identifier.Key.Q, 
+					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+ 			im.associateAction(c,
+					 net.java.games.input.Component.Identifier.Key.E, 
+					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    		 }
 		}
 	}
@@ -421,6 +429,10 @@ public class chainedGame extends VariableFrameRateGame{
 		ghostAvatar.setPosition(ghostPosition.x(),
 				ghostPosition.y(),
 				ghostPosition.z());
+	}
+	
+	public void updateAvatarOrientation(GhostAvatar avatar, Vector3 ghostOrientation) {
+		avatar.setOrientation(ghostOrientation.x(), ghostOrientation.y(), ghostOrientation.z());
 	}
 	
 	public void removeGhostAvatarFromGameWorld(GhostAvatar avatar) {

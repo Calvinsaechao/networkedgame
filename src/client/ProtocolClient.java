@@ -99,6 +99,9 @@ public class ProtocolClient extends GameConnectionClient{
 				game.updateGhostAvatarPosition(getAvatar(ghostID), ghostPosition);
 				
 			}
+			private void updateAvatarOrientation(UUID ghostID, Vector3 ghostPosition) {
+				game.updateAvatarOrientation(getAvatar(ghostID), ghostPosition);
+			}
 			public void sendJoinMessage() {
 				try {
 					sendPacket(new String("join," + id.toString()));
@@ -168,6 +171,15 @@ public class ProtocolClient extends GameConnectionClient{
 				try {
 					sendPacket(message);
 				} catch (IOException e) {e.printStackTrace();}	
+			}
+			
+			public void sendOrientationMessage(Vector3 orientation) {
+				// format : orientation, ghostID, x, y, z
+				String message = new String("orientation,") + id.toString();
+				message += ","+orientation.x()+","+orientation.y()+","+orientation.z();
+				try {
+					sendPacket(message);
+				}catch (IOException e) {e.printStackTrace();}
 			}
 			
 			public UUID getID() {

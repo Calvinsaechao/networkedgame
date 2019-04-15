@@ -72,6 +72,14 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 				UUID senderID = UUID.fromString(msgTokens[1]);
 				sendWantsDetailsMessages(senderID);
 			}
+			
+			//server receives a ORIENTATION message
+			if(msgTokens[0].compareTo("orientation") == 0) {
+				//format: move, ghostID, x, y, z
+				UUID ghostID = UUID.fromString(msgTokens[1]);
+				String[] pos = {msgTokens[2], msgTokens[3], msgTokens[4]};
+				sendOrientationMessages(ghostID, pos);
+			}
 		}// main if
 		
 
@@ -133,6 +141,17 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 		// format : move, clientID, x,y,z
 				try {
 					String message = new String("move," + clientID.toString());
+					message += "," + pos[0];
+					message += "," + pos[1];
+					message += "," + pos[2];
+					forwardPacketToAll(message, clientID);
+				}catch(IOException e) {e.printStackTrace();}
+	}
+	
+	private void sendOrientationMessages(UUID clientID, String[] pos) {
+		// format : move, clientID, x,y,z
+				try {
+					String message = new String("orientation," + clientID.toString());
 					message += "," + pos[0];
 					message += "," + pos[1];
 					message += "," + pos[2];

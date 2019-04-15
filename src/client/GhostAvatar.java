@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import ray.rage.scene.Entity;
 import ray.rage.scene.SceneNode;
+import ray.rml.Matrix3f;
 import ray.rml.Vector3;
 import ray.rml.Vector3f;
 
@@ -34,5 +35,8 @@ public class GhostAvatar {
 	
 	public void setPosition(float x, float y, float z) {
 		node.setLocalPosition(x, y, z);
+	}
+	public void setOrientation(float x, float y, float z) {
+		node.setLocalRotation(Matrix3f.createFrom(new float[] {x,y,z}));
 	}
 }
