@@ -27,7 +27,8 @@ public class TurnAction extends AbstractInputAction {
 			System.out.println("Turning left...");
 			avN.yaw(Degreef.createFrom(2));
 		}
-		//TODO: turn message
+		avN.moveBackward(1);
 		protClient.sendOrientationMessage(avN.getWorldPosition());
+		avN.moveBackward(-1);
 	}
 }

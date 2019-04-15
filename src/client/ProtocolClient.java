@@ -81,6 +81,15 @@ public class ProtocolClient extends GameConnectionClient{
 								Float.parseFloat(msgTokens[4]));
 						updateAvatarPosition(ghostID, ghostPosition);
 					}
+					if(msgTokens[0].compareTo("orientation") == 0) {
+						//format: orientation, ghostID, x,y,z
+						UUID ghostID = UUID.fromString(msgTokens[1]);
+						Vector3 ghostPosition = Vector3f.createFrom(
+								Float.parseFloat(msgTokens[2]), 
+								Float.parseFloat(msgTokens[3]),
+								Float.parseFloat(msgTokens[4]));
+						updateAvatarOrientation(ghostID, ghostPosition);
+					}
 					//add more messages
 				}
 			}
