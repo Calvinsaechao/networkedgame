@@ -187,6 +187,7 @@ public class chainedGame extends VariableFrameRateGame{
 		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
 		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
 		makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, 0f, 200f));
+		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, 0f, 200f));
 		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
@@ -244,6 +245,18 @@ public class chainedGame extends VariableFrameRateGame{
 		boxE.setRenderState(texBoxState);
 		boxN.attachObject(boxE);
 		boxN.setLocalPosition(pos);
+	}
+	
+	protected void makeGoldCoin (SceneManager sm, Vector3 pos) throws IOException {
+		Entity goldCoinE = sm.createEntity("goldCoin", "goldcoin.obj");
+		goldCoinE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode goldCoinN = sm.getRootSceneNode().createChildSceneNode(goldCoinE.getName() + "Node");
+		Texture texGoldCoin = this.getEngine().getTextureManager().getAssetByPath("goldcoin.png");
+		TextureState texGoldCoinState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texGoldCoinState.setTexture(texGoldCoin);
+		goldCoinE.setRenderState(texGoldCoinState);
+		goldCoinN.attachObject(goldCoinE);
+		goldCoinN.setLocalPosition(pos);
 	}
 	
 	protected void makeRoad (SceneManager sm, Vector3 pos) throws IOException{
