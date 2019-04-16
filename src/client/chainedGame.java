@@ -304,9 +304,9 @@ public class chainedGame extends VariableFrameRateGame{
 		//String kbName = im.getKeyboardName();
 		
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
-		Action moveForwardAction = new MoveForwardAction(AvatarN, protClient, this);
+		Action moveRightAction = new MoveRtAction(AvatarN, protClient, this);
 		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient, this);
-		Action moveRightAction = new MoveRightAction(AvatarN, protClient, this);
+		Action moveForwardAction = new MoveFwdAction(AvatarN, protClient, this);
 		Action moveLeftAction = new MoveLeftAction(AvatarN, protClient, this);
 		Action orbitAroundAction = new OrbitRightAction(orbitController);
 		Action orbitLeftAction = new OrbitLeftAction(orbitController);
@@ -322,13 +322,13 @@ public class chainedGame extends VariableFrameRateGame{
 				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.S,
-				moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+				moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
    					net.java.games.input.Component.Identifier.Key.D,
-   					moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+   					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
    					net.java.games.input.Component.Identifier.Key.A,
-   					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+   					moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.ESCAPE,
 				sendCloseConPckAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
