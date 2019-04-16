@@ -293,7 +293,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		// use avatar WORLD coordinates to get coordinates for height
 		Vector3 newAvatarPosition = Vector3f.createFrom(localAvatarPosition.x(),
-														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 1.0f,
+														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 1.95f,
 														 localAvatarPosition.z());
 		// use avatar LOCAL coordinates to set position, including height
 		avatarN.setLocalPosition(newAvatarPosition);
@@ -453,7 +453,7 @@ public class chainedGame extends VariableFrameRateGame{
 		texCarState.setTexture(texCar);
 		playerE.setRenderState(texCarState);
 		playerN.attachObject(playerE);
-		playerN.scale(0.02f, 0.02f, 0.02f);
+		playerN.scale(0.2f, 0.2f, 0.2f);
 		//playerN.moveUp(0.3f);
 		playerN.setLocalPosition(-2.0f, 0.0f, 204.0f);
 		playerN.yaw(Degreef.createFrom(90.0f));
