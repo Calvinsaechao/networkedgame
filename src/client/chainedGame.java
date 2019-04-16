@@ -186,6 +186,9 @@ public class chainedGame extends VariableFrameRateGame{
 		//--------Relative Objects--------//
 		//makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
 		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
+
+		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
+		makeBox(sm, (Vector3)Vector3f.createFrom(-10.9f, -2.27f, 177.49f));
 		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
 		makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, -2.5f, 200f));
 		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, -2.2f, 200f));
@@ -240,7 +243,7 @@ public class chainedGame extends VariableFrameRateGame{
 		Entity boxE = sm.createEntity("box", "box.obj");
 		boxE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode boxN = sm.getRootSceneNode().createChildSceneNode(boxE.getName() + "Node");
-		Texture texBox = this.getEngine().getTextureManager().getAssetByPath("box.png");
+		Texture texBox = this.getEngine().getTextureManager().getAssetByPath("wood.jpg");
 		TextureState texBoxState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 		texBoxState.setTexture(texBox);
 		boxE.setRenderState(texBoxState);
@@ -442,13 +445,18 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void addAvatarToGameWorld(Avatar avatar, SceneManager sm) throws IOException{
 		if (avatar != null) {
-		Entity playerE = sm.createEntity("player", "dolphinHighPoly.obj");
+		Entity playerE = sm.createEntity("player", "car.obj");
 		playerE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
+		Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car.png");
+		TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texCarState.setTexture(texCar);
+		playerE.setRenderState(texCarState);
 		playerN.attachObject(playerE);
-		playerN.moveUp(0.3f);
+		playerN.scale(0.2f, 0.2f, 0.2f);
+		//playerN.moveUp(0.3f);
 		playerN.setLocalPosition(-2.0f, 0.0f, 204.0f);
-		playerN.yaw(Degreef.createFrom(180.0f));
+		playerN.yaw(Degreef.createFrom(270.0f));
 		avatar.setNode(playerN);
 		avatar.setEntity(playerE);
 		}
