@@ -17,6 +17,8 @@ import ray.input.action.AbstractInputAction;
 import ray.input.action.Action;
 import ray.networking.IGameConnection.ProtocolType;
 import ray.rage.Engine;
+import ray.rage.asset.material.Material;
+import ray.rage.asset.material.MaterialManager;
 import ray.rage.asset.texture.Texture;
 import ray.rage.game.Game;
 import ray.rage.game.VariableFrameRateGame;
@@ -156,11 +158,10 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		//-------------Lights-------------//
 		sm.getAmbientLight().setIntensity(new Color(.3f, .3f, .3f));
-		Light plight=sm.createLight("testLamp1", Light.Type.POINT);
+		Light plight=sm.createLight("testLamp1", Light.Type.DIRECTIONAL);
 		plight.setAmbient(new Color(.1f,.1f,.1f));
 		plight.setDiffuse(new Color(.8f,.8f,.8f));
 		plight.setSpecular(new Color(1.0f,1.0f,1.0f));
-		plight.setRange(100f);
 		SceneNode plightNode = sm.getRootSceneNode().createChildSceneNode("plightNode");
 		plightNode.attachObject(plight);
 		plightNode.setLocalPosition(1f,1f, 1f);
@@ -186,8 +187,8 @@ public class chainedGame extends VariableFrameRateGame{
 		//makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
 		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
 		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
-		makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, 0f, 200f));
-		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, 0f, 200f));
+		makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, -2.5f, 200f));
+		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, -2.2f, 200f));
 		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
@@ -248,6 +249,7 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	protected void makeGoldCoin (SceneManager sm, Vector3 pos) throws IOException {
+		MaterialManager mm = sm.getMaterialManager();
 		Entity goldCoinE = sm.createEntity("goldCoin", "goldcoin.obj");
 		goldCoinE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode goldCoinN = sm.getRootSceneNode().createChildSceneNode(goldCoinE.getName() + "Node");
@@ -257,6 +259,12 @@ public class chainedGame extends VariableFrameRateGame{
 		goldCoinE.setRenderState(texGoldCoinState);
 		goldCoinN.attachObject(goldCoinE);
 		goldCoinN.setLocalPosition(pos);
+		Material goldCoinMat = mm.getAssetByName("goldcoin.mtl");
+		//goldCoinMat.setDiffuse(Color.getHSBColor(0.64f, 0.64f, 0.64f));
+		//goldCoinMat.setAmbient(Color.getHSBColor(1f, 1f, 1f));
+		//goldCoinMat.setSpecular(Color.getHSBColor(.5f, .5f, .5f));
+		goldCoinMat.setShininess(1f);
+		goldCoinE.setMaterial(goldCoinMat);
 	}
 	
 	protected void makeRoad (SceneManager sm, Vector3 pos) throws IOException{

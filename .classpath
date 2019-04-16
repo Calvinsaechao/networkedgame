@@ -8,7 +8,11 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/javagaming/jinput/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/javagaming/rage165/ray.jar"/>
+	<classpathentry kind="lib" path="C:/javagaming/rage165/ray.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/javagaming/rage165/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="C:/javagaming/vecmath/vecmath.jar"/>
 	<classpathentry kind="lib" path="/javagaming/jbullet/jbullet.jar"/>
 	<classpathentry kind="lib" path="/javagaming/jinput/jinput.jar"/>
