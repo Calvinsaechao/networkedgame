@@ -188,10 +188,10 @@ public class chainedGame extends VariableFrameRateGame{
 		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
 
 		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
-		//makeBox(sm, (Vector3)Vector3f.createFrom(-10.9f, -2.27f, 177.49f));
-		makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
-		makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, -2.5f, 200f));
-		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, -2.2f, 200f));
+		makeBox(sm, (Vector3)Vector3f.createFrom(-10.9f, -2.27f, 177.49f));
+		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
+		//makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, 0f, 200f));
+		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, 0f, 200f));
 		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
@@ -445,17 +445,18 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void addAvatarToGameWorld(Avatar avatar, SceneManager sm) throws IOException{
 		if (avatar != null) {
-		Entity playerE = sm.createEntity("player", "car.obj");
+		Entity playerE = sm.createEntity("player", "carka.obj");
 		playerE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
-		Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car.png");
+		Texture texCar = this.getEngine().getTextureManager().getAssetByPath("carka.png");
 		TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 		texCarState.setTexture(texCar);
 		playerE.setRenderState(texCarState);
 		playerN.attachObject(playerE);
-		playerN.scale(0.2f, 0.2f, 0.2f);
+		playerN.scale(0.02f, 0.02f, 0.02f);
 		//playerN.moveUp(0.3f);
-		playerN.setLocalPosition(-2.0f, -1.0f, 204.0f);
+		playerN.setLocalPosition(-2.0f, 0.0f, 204.0f);
+		playerN.yaw(Degreef.createFrom(90.0f));
 		avatar.setNode(playerN);
 		avatar.setEntity(playerE);
 		}
