@@ -20,7 +20,7 @@ public class MoveRtAction extends AbstractInputAction{
 		System.out.println("Move Right Action");
 		System.out.println("X pos: " + avN.getWorldPosition().x());
 		System.out.println("Z pos: " + avN.getWorldPosition().z());
-		avN.moveForward(0.1f);
+		avN.moveRight(-0.1f);
 		game.updateVerticalPosition();
 		protClient.sendMoveMessage(avN.getWorldPosition());
 	}

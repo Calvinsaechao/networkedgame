@@ -321,13 +321,13 @@ public class chainedGame extends VariableFrameRateGame{
 				net.java.games.input.Component.Identifier.Key.W,
 				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-				net.java.games.input.Component.Identifier.Key.S,
+				net.java.games.input.Component.Identifier.Key.A,
 				moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
    					net.java.games.input.Component.Identifier.Key.D,
    					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.A,
+   					net.java.games.input.Component.Identifier.Key.S,
    					moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
 				net.java.games.input.Component.Identifier.Key.ESCAPE,
@@ -457,9 +457,10 @@ public class chainedGame extends VariableFrameRateGame{
 		playerN.scale(0.2f, 0.2f, 0.2f);
 		//playerN.moveUp(0.3f);
 		playerN.setLocalPosition(-2.0f, 0.0f, 204.0f);
-		playerN.yaw(Degreef.createFrom(90.0f));
 		avatar.setNode(playerN);
 		avatar.setEntity(playerE);
+		playerN.yaw(Degreef.createFrom(180));
+		
 		}
 		
 	}

@@ -21,7 +21,7 @@ public class MoveFwdAction extends AbstractInputAction {
 		System.out.println("Move Forward Action");
 		System.out.println("X pos: " + avN.getWorldPosition().x());
 		System.out.println("Z pos: " + avN.getWorldPosition().z());
-		avN.moveRight(0.1f);
+		avN.moveForward(0.1f);
 		game.updateVerticalPosition();
 		protClient.sendMoveMessage(avN.getWorldPosition());
 	}
