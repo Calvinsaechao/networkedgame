@@ -361,6 +361,7 @@ public class chainedGame extends VariableFrameRateGame{
     	SceneNode cameraN = sm.getSceneNode("MainCameraNode");
     	Camera camera = sm.getCamera("MainCamera");
     	camera.setMode('n');
+    	cameraN.moveBackward(3f);
     	orbitController = new Camera3PController(camera, cameraN, avatarN, im);
 	}
 
