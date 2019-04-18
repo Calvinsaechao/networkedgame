@@ -293,7 +293,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		// use avatar WORLD coordinates to get coordinates for height
 		Vector3 newAvatarPosition = Vector3f.createFrom(localAvatarPosition.x(),
-														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 1.95f,
+														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 0.4f,
 														 localAvatarPosition.z());
 		// use avatar LOCAL coordinates to set position, including height
 		avatarN.setLocalPosition(newAvatarPosition);
@@ -431,7 +431,22 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		
 		if (avatar != null) {  
-			Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
+			Entity playerE = sm.createEntity(avatar.getID().toString(), "car_mine.obj");
+			playerE.setPrimitive(Primitive.TRIANGLES);
+			SceneNode playerN = sm.getRootSceneNode().createChildSceneNode(avatar.getID().toString());
+			Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car_tex.png");
+			TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+			texCarState.setTexture(texCar);
+			playerE.setRenderState(texCarState);
+			playerN.attachObject(playerE);
+			playerN.scale(0.4f, 0.4f, 0.4f);
+			//playerN.moveUp(0.3f);
+			playerN.setLocalPosition(-2.0f, -1.80f, 204.0f);
+			avatar.setNode(playerN);
+			avatar.setEntity(playerE);
+			playerN.yaw(Degreef.createFrom(180));
+			protClient.addGhostAvatar(avatar);
+			/**Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
 			ghostE.setPrimitive(Primitive.TRIANGLES);
 			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(avatar.getID().toString());
 			ghostN.attachObject(ghostE);
@@ -440,27 +455,26 @@ public class chainedGame extends VariableFrameRateGame{
 			ghostN.scale(Vector3f.createFrom(scale,scale,scale));
 			avatar.setNode(ghostN);
 			avatar.setEntity(ghostE);
-			protClient.addGhostAvatar(avatar);
+			protClient.addGhostAvatar(avatar);**/
 		} 
 	}
 	
 	public void addAvatarToGameWorld(Avatar avatar, SceneManager sm) throws IOException{
 		if (avatar != null) {
-		Entity playerE = sm.createEntity("player", "car_mine.obj");
-		playerE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
-		Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car_tex.png");
-		TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
-		texCarState.setTexture(texCar);
-		playerE.setRenderState(texCarState);
-		playerN.attachObject(playerE);
-		playerN.scale(0.2f, 0.2f, 0.2f);
-		//playerN.moveUp(0.3f);
-		playerN.setLocalPosition(-2.0f, 0.0f, 204.0f);
-		avatar.setNode(playerN);
-		avatar.setEntity(playerE);
-		playerN.yaw(Degreef.createFrom(180));
-		
+			Entity playerE = sm.createEntity("player", "car_mine.obj");
+			playerE.setPrimitive(Primitive.TRIANGLES);
+			SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
+			Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car_tex.png");
+			TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+			texCarState.setTexture(texCar);
+			playerE.setRenderState(texCarState);
+			playerN.attachObject(playerE);
+			playerN.scale(0.4f, 0.4f, 0.4f);
+			//playerN.moveUp(0.3f);
+			playerN.setLocalPosition(-2.0f, -1.80f, 204.0f);
+			avatar.setNode(playerN);
+			avatar.setEntity(playerE);
+			playerN.yaw(Degreef.createFrom(180));
 		}
 		
 	}

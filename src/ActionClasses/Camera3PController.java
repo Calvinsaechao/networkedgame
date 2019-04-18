@@ -28,7 +28,7 @@ public class Camera3PController {
 		target = targ;
 		cameraAzimuth = 0f; // start from BEHIND and ABOVE the target
 		cameraElevation = 20.0f; // elevation is in degrees
-		radias = 2.0f;
+		radias = 8.0f;
 		worldUpVec = Vector3f.createFrom(0.0f, 1.0f, 0.0f);
 		setupInput(im);
 	}
@@ -67,8 +67,6 @@ public class Camera3PController {
      			im.associateAction(c,
     					 net.java.games.input.Component.Identifier.Key.DOWN, 
     					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-    			 
-    			 
     		}
     	}
 	  }
