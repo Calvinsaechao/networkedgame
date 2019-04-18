@@ -321,10 +321,10 @@ public class chainedGame extends VariableFrameRateGame{
 				net.java.games.input.Component.Identifier.Key.W,
 				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-				net.java.games.input.Component.Identifier.Key.A,
+				net.java.games.input.Component.Identifier.Key.Q,
 				moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.D,
+   					net.java.games.input.Component.Identifier.Key.E,
    					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
    					net.java.games.input.Component.Identifier.Key.S,
@@ -345,10 +345,10 @@ public class chainedGame extends VariableFrameRateGame{
 					 net.java.games.input.Component.Identifier.Key.DOWN, 
 					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
  			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.Q, 
+					 net.java.games.input.Component.Identifier.Key.A, 
 					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
  			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.E, 
+					 net.java.games.input.Component.Identifier.Key.D, 
 					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    		 }
 		}

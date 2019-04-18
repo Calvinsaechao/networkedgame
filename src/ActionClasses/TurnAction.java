@@ -19,11 +19,11 @@ public class TurnAction extends AbstractInputAction {
 	}
 	@Override
 	public void performAction(float time, Event e) {
-		if(e.getComponent().getIdentifier().getName().equalsIgnoreCase("E")) {
+		if(e.getComponent().getIdentifier().getName().equalsIgnoreCase("D")) {
 			System.out.println("Turning right...");
 			avN.yaw(Degreef.createFrom(-2));
 		}
-		else if (e.getComponent().getIdentifier().getName().equalsIgnoreCase("Q")) {
+		else if (e.getComponent().getIdentifier().getName().equalsIgnoreCase("A")) {
 			System.out.println("Turning left...");
 			avN.yaw(Degreef.createFrom(2));
 		}
