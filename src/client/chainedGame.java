@@ -446,10 +446,10 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void addAvatarToGameWorld(Avatar avatar, SceneManager sm) throws IOException{
 		if (avatar != null) {
-		Entity playerE = sm.createEntity("player", "car.obj");
+		Entity playerE = sm.createEntity("player", "car_mine.obj");
 		playerE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
-		Texture texCar = this.getEngine().getTextureManager().getAssetByPath("carka.png");
+		Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car_tex.png");
 		TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 		texCarState.setTexture(texCar);
 		playerE.setRenderState(texCarState);
