@@ -112,7 +112,6 @@ public class chainedGame extends VariableFrameRateGame{
 	private void executeScript(ScriptEngine engine, File scriptFileName) {
 		try
 		{ FileReader fileReader = new FileReader(scriptFileName);
-		  System.out.println("FileReader directory: " + scriptFileName.getAbsoluteFile());
 		  engine.eval(fileReader);
 		  fileLastModifiedTime = scriptFile1.lastModified();
 		  fileReader.close();}
