@@ -18,9 +18,6 @@ public class MoveLeftAction extends AbstractInputAction {
 	}
 	@Override
 	public void performAction(float time, Event e) {
-		System.out.println("Move Left Action");
-		System.out.println("X pos: " + avN.getWorldPosition().x());
-		System.out.println("Z pos: " + avN.getWorldPosition().z());
 		avN.moveLeft(-0.1f);
 		game.updateVerticalPosition();
 		protClient.sendMoveMessage(avN.getWorldPosition());
