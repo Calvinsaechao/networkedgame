@@ -28,7 +28,7 @@ public class Camera3PController {
 		target = targ;
 		cameraAzimuth = 0f; // start from BEHIND and ABOVE the target
 		cameraElevation = 20.0f; // elevation is in degrees
-		radias = 8.0f;
+		radias = 16.0f;
 		worldUpVec = Vector3f.createFrom(0.0f, 1.0f, 0.0f);
 		setupInput(im);
 	}
@@ -54,7 +54,6 @@ public class Camera3PController {
     	ArrayList<Controller> controllers = im.getControllers();
     	for (Controller c : controllers) {
     		if (c.getType() == Controller.Type.KEYBOARD) {
-    			System.out.println ("keyboard found");
      			 im.associateAction(c, 
      					 net.java.games.input.Component.Identifier.Key.LEFT, 
      					 orbitAAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);

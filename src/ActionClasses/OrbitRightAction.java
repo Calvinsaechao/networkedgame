@@ -13,12 +13,10 @@ public class OrbitRightAction extends AbstractInputAction {
 	
 	public OrbitRightAction(Camera3PController ctrl) {
 		controller = ctrl;
-		System.out.println("Orbit action constructor executed");
 
 	}
 	@Override
 	public void performAction(float time, Event evt) {
-		System.out.println("Orbit action executed begins");
 
 		float rotAmount, cameraAzimuth;
 		cameraAzimuth = controller.getAzimuth();
@@ -30,7 +28,6 @@ public class OrbitRightAction extends AbstractInputAction {
 		cameraAzimuth = cameraAzimuth % 360;
 		controller.setAzimuth(cameraAzimuth);
 		controller.updateCameraPosition();
-		System.out.println("Orbit action executed ends");
 
 		} 
 		// similar for OrbitRadiasAction, OrbitElevationAction		

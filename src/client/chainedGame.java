@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 import ActionClasses.*;
+import Controllers.ElevationController;
+import Controllers.RotationController;
 import net.java.games.input.Controller;
 import net.java.games.input.Event;
 import ray.input.GenericInputManager;
@@ -110,7 +112,6 @@ public class chainedGame extends VariableFrameRateGame{
 	private void executeScript(ScriptEngine engine, File scriptFileName) {
 		try
 		{ FileReader fileReader = new FileReader(scriptFileName);
-		  System.out.println("FileReader directory: " + scriptFileName.getAbsoluteFile());
 		  engine.eval(fileReader);
 		  fileLastModifiedTime = scriptFile1.lastModified();
 		  fileReader.close();}
@@ -191,7 +192,7 @@ public class chainedGame extends VariableFrameRateGame{
 		makeBox(sm, (Vector3)Vector3f.createFrom(-10.9f, -2.27f, 177.49f));
 		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
 		//makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, 0f, 200f));
-		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, 0f, 200f));
+		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, -1.0f, 200f));
 		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
@@ -268,6 +269,11 @@ public class chainedGame extends VariableFrameRateGame{
 		//goldCoinMat.setSpecular(Color.getHSBColor(.5f, .5f, .5f));
 		goldCoinMat.setShininess(1f);
 		goldCoinE.setMaterial(goldCoinMat);
+		goldCoinN.scale(.5f,.5f,.5f);
+		
+		//Node controller
+		setupElevationController(goldCoinN, sm);
+		setupRotationController(goldCoinN, sm);
 	}
 	
 	protected void makeRoad (SceneManager sm, Vector3 pos) throws IOException{
@@ -321,10 +327,10 @@ public class chainedGame extends VariableFrameRateGame{
 				net.java.games.input.Component.Identifier.Key.W,
 				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-				net.java.games.input.Component.Identifier.Key.A,
+				net.java.games.input.Component.Identifier.Key.Q,
 				moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.D,
+   					net.java.games.input.Component.Identifier.Key.E,
    					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    			 im.associateAction(c,
    					net.java.games.input.Component.Identifier.Key.S,
@@ -345,10 +351,10 @@ public class chainedGame extends VariableFrameRateGame{
 					 net.java.games.input.Component.Identifier.Key.DOWN, 
 					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
  			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.Q, 
+					 net.java.games.input.Component.Identifier.Key.A, 
 					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
  			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.E, 
+					 net.java.games.input.Component.Identifier.Key.D, 
 					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    		 }
 		}
@@ -363,6 +369,18 @@ public class chainedGame extends VariableFrameRateGame{
     	camera.setMode('n');
     	cameraN.moveBackward(3f);
     	orbitController = new Camera3PController(camera, cameraN, avatarN, im);
+	}
+	
+	protected void setupElevationController(SceneNode target, SceneManager sm) {
+    	ElevationController ecE = new ElevationController(target, .015f, .5f);
+    	ecE.addNode(target);
+    	sm.addController(ecE);
+    }
+	
+	protected void setupRotationController(SceneNode target, SceneManager sm) {
+		RotationController ecE = new RotationController(target, .75f);
+		ecE.addNode(target);
+		sm.addController(ecE);
 	}
 
 	@Override

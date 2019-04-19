@@ -14,7 +14,6 @@ public class OrbitDownAction extends AbstractInputAction {
 	
 	public OrbitDownAction(Camera3PController ctrl) {
 		controller = ctrl;
-		System.out.println("Elevation action constructor executed");
 	}
 	@Override
 	public void performAction(float time, Event evt) {

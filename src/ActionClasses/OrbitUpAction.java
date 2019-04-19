@@ -14,7 +14,6 @@ public class OrbitUpAction extends AbstractInputAction {
 	
 	public OrbitUpAction(Camera3PController ctrl) {
 		controller = ctrl;
-		System.out.println("Elevation action constructor executed");
 	}
 	@Override
 	public void performAction(float time, Event evt) {
@@ -34,7 +33,6 @@ public class OrbitUpAction extends AbstractInputAction {
 		cameraElevation = cameraElevation % 360;
 		controller.setElevation(cameraElevation);
 		controller.updateCameraPosition();
-		System.out.println("Elevation action executed");
 		} 
 		// similar for OrbitRadiasAction, OrbitElevationAction		
 	}
