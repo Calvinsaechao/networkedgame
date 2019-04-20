@@ -484,7 +484,7 @@ public class chainedGame extends VariableFrameRateGame{
 			playerE.setPrimitive(Primitive.TRIANGLES);
 			SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
 			Material carMat = this.getEngine().getMaterialManager().getAssetByPath("carblend.mtl");
-			Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car_blue.png");
+			Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car.png");
 			TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 			texCarState.setTexture(texCar);
 			playerE.setRenderState(texCarState);
