@@ -25,8 +25,8 @@ public class TurnAction extends AbstractInputAction {
 		else if (e.getComponent().getIdentifier().getName().equalsIgnoreCase("A")) {
 			avN.yaw(Degreef.createFrom(2));
 		}
-		avN.moveBackward(1);
-		protClient.sendOrientationMessage(avN.getWorldPosition());
 		avN.moveBackward(-1);
+		protClient.sendOrientationMessage(avN.getWorldPosition());
+		avN.moveBackward(1);
 	}
 }
