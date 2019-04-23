@@ -25,7 +25,6 @@ public class OrbitDownAction extends AbstractInputAction {
 		cameraElevation = cameraElevation % 360;
 		controller.setElevation(cameraElevation);
 		controller.updateCameraPosition();
-		System.out.println("Elevation action executed");
 		} 
 		// similar for OrbitRadiasAction, OrbitElevationAction		
 	}
