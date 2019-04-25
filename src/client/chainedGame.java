@@ -181,19 +181,16 @@ public class chainedGame extends VariableFrameRateGame{
 		//tessN.yaw(Degreef.createFrom(37.2f));
 		tessN.scale(400, 800, 400);
 		tessE.setHeightMap(this.getEngine(), "height_map.png");
-		tessE.setTexture(this.getEngine(), "road.png");
+		tessE.setTexture(this.getEngine(), "road1.png");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		
 		//--------Relative Objects--------//
-		//makePlanet(sm, (Vector3)Vector3f.createFrom(-3f, 2.0f, -3f));
-		//makeTree (sm, (Vector3)Vector3f.createFrom(3f, 1f, -3f));
+		
+		makeBox(sm, (Vector3)Vector3f.createFrom(-19.76f, -2.27f, 91.7f));
+		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 65.2f));
+		makeMan(sm, (Vector3)Vector3f.createFrom(18f, -1.8f, 117f));
+	
 
-		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
-		makeBox(sm, (Vector3)Vector3f.createFrom(-10.9f, -2.27f, 177.49f));
-		//makeRock (sm, (Vector3)Vector3f.createFrom(-3f, 0f, -2f));
-		//makeBox(sm, (Vector3)Vector3f.createFrom(-3.0f, 0f, 200f));
-		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-4.0f, -1.0f, 200f));
-		//makeRoad (sm, (Vector3)Vector3f.createFrom(-6.2f, -6.0f, -2.7f));
 		
 		
 		//Script Engine
@@ -214,31 +211,6 @@ public class chainedGame extends VariableFrameRateGame{
 		planetN.setLocalPosition(pos);
 	}
 	
-	protected void makeTree (SceneManager sm, Vector3 pos) throws IOException{
-		Entity treeE = sm.createEntity("tree", "tree_big.obj");
-		treeE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode treeN = sm.getRootSceneNode().createChildSceneNode(treeE.getName() + "Node");
-		/*
-		Texture texTree = this.getEngine().getTextureManager().getAssetByPath("tree.png");
-		TextureState texTreeState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
-		texTreeState.setTexture(texTree);
-        treeE.setRenderState(texTreeState);
-        */
-		treeN.attachObject(treeE);
-		treeN.setLocalPosition(pos);
-	}
-	
-	protected void makeRock (SceneManager sm, Vector3 pos) throws IOException{
-		Entity rockE = sm.createEntity("rock", "rock.obj");
-		rockE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode rockN = sm.getRootSceneNode().createChildSceneNode(rockE.getName() + "Node");
-		Texture texRock = this.getEngine().getTextureManager().getAssetByPath("rock.png");
-        TextureState texRockState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
-        texRockState.setTexture(texRock);
-        rockE.setRenderState(texRockState);
-		rockN.attachObject(rockE);
-		rockN.setLocalPosition(pos);
-	}
 	
 	protected void makeBox (SceneManager sm, Vector3 pos) throws IOException {
 		Entity boxE = sm.createEntity("box", "box.obj");
@@ -249,7 +221,21 @@ public class chainedGame extends VariableFrameRateGame{
 		texBoxState.setTexture(texBox);
 		boxE.setRenderState(texBoxState);
 		boxN.attachObject(boxE);
+		boxN.scale(2.5f, 2.5f, 2.5f);
 		boxN.setLocalPosition(pos);
+	}
+	
+	protected void makeMan(SceneManager sm, Vector3 pos) throws IOException{
+		Entity manE = sm.createEntity("man", "man.obj");
+		manE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manE.getName() + "Node");
+		Texture texMan = this.getEngine().getTextureManager().getAssetByPath("man_tex.png");
+		TextureState texManState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texManState.setTexture(texMan);
+		manE.setRenderState(texManState);
+		manN.attachObject(manE);
+		manN.scale(1.8f, 1.8f, 1.8f);
+		manN.setLocalPosition(pos);
 	}
 	
 	protected void makeGoldCoin (SceneManager sm, Vector3 pos) throws IOException {
@@ -269,23 +255,11 @@ public class chainedGame extends VariableFrameRateGame{
 		//goldCoinMat.setSpecular(Color.getHSBColor(.5f, .5f, .5f));
 		goldCoinMat.setShininess(1f);
 		goldCoinE.setMaterial(goldCoinMat);
-		goldCoinN.scale(.5f,.5f,.5f);
+		goldCoinN.scale(2.5f,2.5f,2.5f);
 		
 		//Node controller
 		setupElevationController(goldCoinN, sm);
 		setupRotationController(goldCoinN, sm);
-	}
-	
-	protected void makeRoad (SceneManager sm, Vector3 pos) throws IOException{
-		Entity roadE = sm.createEntity("road", "road.obj");
-		roadE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode roadN = sm.getRootSceneNode().createChildSceneNode(roadE.getName() + "Node");
-		Texture texRoad = this.getEngine().getTextureManager().getAssetByPath("road.jpg");
-        TextureState texRoadState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
-        texRoadState.setTexture(texRoad);
-        roadE.setRenderState(texRoadState);
-		roadN.attachObject(roadE);
-		roadN.setLocalPosition(pos);
 	}
 	
 	public void updateVerticalPosition() {
@@ -299,7 +273,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		// use avatar WORLD coordinates to get coordinates for height
 		Vector3 newAvatarPosition = Vector3f.createFrom(localAvatarPosition.x(),
-														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 0.4f,
+														 tessE.getWorldHeight(worldAvatarPosition.x(), worldAvatarPosition.z())+ 2f,
 														 localAvatarPosition.z());
 		// use avatar LOCAL coordinates to set position, including height
 		avatarN.setLocalPosition(newAvatarPosition);
@@ -429,7 +403,6 @@ public class chainedGame extends VariableFrameRateGame{
 		left.transform(xform);
 		right.transform(xform);
 		back.transform(xform);
-		
 		SkyBox sb = sm.createSkyBox(SKYBOX_NAME);
 		sb.setTexture(front, SkyBox.Face.FRONT);
 		sb.setTexture(back, SkyBox.Face.BACK);
@@ -458,9 +431,9 @@ public class chainedGame extends VariableFrameRateGame{
 			texCarState.setTexture(texCar);
 			playerE.setRenderState(texCarState);
 			playerN.attachObject(playerE);
-			playerN.scale(0.4f, 0.4f, 0.4f);
+			playerN.scale(2f, 2f, 2f);
 			//playerN.moveUp(0.3f);
-			playerN.setLocalPosition(-2.0f, -1.80f, 204.0f);
+			playerN.setLocalPosition(-3.5f, -0.2f, 157.6f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
@@ -489,9 +462,8 @@ public class chainedGame extends VariableFrameRateGame{
 			texCarState.setTexture(texCar);
 			playerE.setRenderState(texCarState);
 			playerN.attachObject(playerE);
-			playerN.scale(0.4f, 0.4f, 0.4f);
-			//playerN.moveUp(0.3f);
-			playerN.setLocalPosition(-2.0f, -1.80f, 204.0f);
+			playerN.scale(2f, 2f, 2f);
+			playerN.setLocalPosition(-3.5f, -0.2f, 157.6f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
