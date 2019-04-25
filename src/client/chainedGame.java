@@ -179,16 +179,17 @@ public class chainedGame extends VariableFrameRateGame{
 		tessN.attachObject(tessE);
 		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
 		//tessN.yaw(Degreef.createFrom(37.2f));
-		tessN.scale(400, 800, 400);
+		tessN.scale(600, 1200, 600);
 		tessE.setHeightMap(this.getEngine(), "height_map.png");
 		tessE.setTexture(this.getEngine(), "road1.png");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		
 		//--------Relative Objects--------//
 		
-		makeBox(sm, (Vector3)Vector3f.createFrom(-19.76f, -2.27f, 91.7f));
+		makeBox1(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, 95.3f));
+		makeBox2(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, -39.7f));
 		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 65.2f));
-		makeMan(sm, (Vector3)Vector3f.createFrom(18f, -1.8f, 117f));
+		makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
 	
 
 		
@@ -212,8 +213,8 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	
-	protected void makeBox (SceneManager sm, Vector3 pos) throws IOException {
-		Entity boxE = sm.createEntity("box", "box.obj");
+	protected void makeBox1 (SceneManager sm, Vector3 pos) throws IOException {
+		Entity boxE = sm.createEntity("box1", "box.obj");
 		boxE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode boxN = sm.getRootSceneNode().createChildSceneNode(boxE.getName() + "Node");
 		Texture texBox = this.getEngine().getTextureManager().getAssetByPath("wood.jpg");
@@ -221,7 +222,20 @@ public class chainedGame extends VariableFrameRateGame{
 		texBoxState.setTexture(texBox);
 		boxE.setRenderState(texBoxState);
 		boxN.attachObject(boxE);
-		boxN.scale(2.5f, 2.5f, 2.5f);
+		boxN.scale(3f, 3f, 3f);
+		boxN.setLocalPosition(pos);
+	}
+	
+	protected void makeBox2 (SceneManager sm, Vector3 pos) throws IOException {
+		Entity boxE = sm.createEntity("box2", "box.obj");
+		boxE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode boxN = sm.getRootSceneNode().createChildSceneNode(boxE.getName() + "Node");
+		Texture texBox = this.getEngine().getTextureManager().getAssetByPath("wood.jpg");
+		TextureState texBoxState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texBoxState.setTexture(texBox);
+		boxE.setRenderState(texBoxState);
+		boxN.attachObject(boxE);
+		boxN.scale(3f, 3f, 3f);
 		boxN.setLocalPosition(pos);
 	}
 	
