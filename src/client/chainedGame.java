@@ -266,17 +266,26 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	protected void makeMan(SceneManager sm, Vector3 pos) throws IOException{
-		Entity manE = sm.createEntity("man", "man.obj");
-		manE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manE.getName() + "Node");
+		//SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
+		Entity manSE = sm.createEntity("man", "man.obj");
+		manSE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
 		Texture texMan = this.getEngine().getTextureManager().getAssetByPath("man_tex.png");
 		TextureState texManState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 		texManState.setTexture(texMan);
-		manE.setRenderState(texManState);
-		manN.attachObject(manE);
+		manSE.setRenderState(texManState);
+		manN.attachObject(manSE);
 		manN.scale(1.8f, 1.8f, 1.8f);
 		manN.setLocalPosition(pos);
+		//load animations
+		//manSE.loadAnimation("man_wave", "man_animated.rka");
 	}
+	/*
+	private void doTheWave() {
+		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
+		manSE.stopAnimation();
+		manSE.playAnimation("man_wave", 0.5f, SkeletalEntity.EndType.LOOP, 0);
+	} */
 	
 	protected void makeGoldCoin (SceneManager sm, Vector3 pos) throws IOException {
 		MaterialManager mm = sm.getMaterialManager();
@@ -413,6 +422,8 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 		im.update(elapsTime);
 		orbitController.updateCameraPosition();
+		//SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
+		//manSE.update();
  	}
 	
 	protected void processNetworking(float elapsTime, SceneManager sm) {
@@ -503,7 +514,7 @@ public class chainedGame extends VariableFrameRateGame{
 			playerE.setRenderState(texCarState);
 			playerN.attachObject(playerE);
 			playerN.scale(2f, 2f, 2f);
-			playerN.setLocalPosition(-3.5f, -0.2f, 157.6f);
+			playerN.setLocalPosition(-3.9f, -0.2f, 239.6f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
