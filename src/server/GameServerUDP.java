@@ -80,6 +80,16 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 				String[] pos = {msgTokens[2], msgTokens[3], msgTokens[4]};
 				sendOrientationMessages(ghostID, pos);
 			}
+			
+			//server receives a NEED NPC details message
+			if(msgTokens[0].compareTo("needNPC") == 0) {
+				// something something
+			}
+			
+			// server receives a COLLIDE message
+			if(msgTokens[0].compareTo("collide") == 0) {
+				//something something
+			}
 		}// main if
 		
 
@@ -161,7 +171,13 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 	
 	public void sendNPCinfo() {
 		for(int i=0; i<npcCtrl.getNumOfNPCs(); i++) {
-			
+			try {
+				String message = new String("mnpc," + Integer.toString(i));
+				message += "," + (npcCtrl.getNPC(i)).getX();
+				message += "," + (npcCtrl.getNPC(i)).getY();
+				message += "," + (npcCtrl.getNPC(i)).getZ();
+				sendPacketToAll(message);
+			}
 		}
 	}
 	
