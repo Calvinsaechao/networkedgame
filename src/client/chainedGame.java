@@ -8,6 +8,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
+import ray.physics.PhysicsEngine;
+import ray.physics.PhysicsObject;
+import ray.physics.PhysicsEngineFactory;
 import ActionClasses.*;
 import Controllers.ElevationController;
 import Controllers.RotationController;
@@ -67,6 +70,9 @@ public class chainedGame extends VariableFrameRateGame{
 	private ProtocolClient protClient;
 	private boolean isClientConnected;
 	private Vector<UUID> gameObjectsToRemove;
+	
+	//physics
+	private PhysicsEngine physicsEng;
 	
 	public chainedGame(String serverAddr, int sPort) {
 		super();
@@ -190,7 +196,7 @@ public class chainedGame extends VariableFrameRateGame{
 		makeBox2(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, -39.7f));
 		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 65.2f));
 		makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
-	
+		makeChain(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 40.2f));
 
 		
 		
@@ -204,6 +210,23 @@ public class chainedGame extends VariableFrameRateGame{
 		setupOrbitCameras(eng, sm);
 	}
 	
+	private void initPhysicsSystem() {
+		String engine = "ray.physics.Jbullet.JBulletPhysicsEngine";
+		float[] gravity = {0, -3f, 0};
+		
+		physicsEng = PhysicsEngineFactory.createPhysicsEngine(engine);
+		physicsEng.initSystem();
+		physicsEng.setGravity(gravity);
+	}
+	
+	private void createRagePhysicsWorld() {
+		float mass = 1.0f;
+		float up[] = {0,1,0};
+		double[] temptf;
+		
+		
+	}
+	
 	protected void makePlanet(SceneManager sm, Vector3 pos) throws IOException {
 		Entity planetE = sm.createEntity("planet", "earth.obj");
 		planetE.setPrimitive(Primitive.TRIANGLES);
@@ -212,6 +235,9 @@ public class chainedGame extends VariableFrameRateGame{
 		planetN.setLocalPosition(pos);
 	}
 	
+	protected void makeChain(SceneManager sm, Vector3 pos) {
+		
+	}
 	
 	protected void makeBox1 (SceneManager sm, Vector3 pos) throws IOException {
 		Entity boxE = sm.createEntity("box1", "box.obj");
