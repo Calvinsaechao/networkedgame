@@ -159,6 +159,12 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 				}catch(IOException e) {e.printStackTrace();}
 	}
 	
+	public void sendNPCinfo() {
+		for(int i=0; i<npcCtrl.getNumOfNPCs(); i++) {
+			
+		}
+	}
+	
 
 	
 	
