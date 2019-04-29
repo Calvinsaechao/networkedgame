@@ -23,7 +23,7 @@ public class NPCcontroller{
 	// state changes if a car approaches from idle to cheering
 	// assume if state == 1 --> idle
 	//		  if state == 2 --> cheering
-	// possible future state if car crashes, state changes to sad
+	// possible future state if car crashes, state changes to sad?
 	public int getState() {
 		int x=0;
 		if (cheering) x=2;
