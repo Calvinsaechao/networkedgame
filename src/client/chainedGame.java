@@ -40,6 +40,9 @@ import ray.rml.Vector3;
 import ray.rml.Vector3f;
 import ray.rage.scene.SceneManager;
 import ray.rage.scene.SceneNode;
+import ray.rage.scene.SkeletalEntity;
+import ray.rage.scene.SkeletalEntity.EndType;
+import ray.rage.scene.SkeletalEntity.EndType.*;
 import ray.rage.scene.SkyBox;
 import ray.rage.scene.Tessellation;
 
@@ -181,7 +184,7 @@ public class chainedGame extends VariableFrameRateGame{
 		//tessN.yaw(Degreef.createFrom(37.2f));
 		tessN.scale(600, 1200, 600);
 		tessE.setHeightMap(this.getEngine(), "height_map.png");
-		tessE.setTexture(this.getEngine(), "road1.png");
+		tessE.setTexture(this.getEngine(), "street.png");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		
 		//--------Relative Objects--------//
@@ -189,7 +192,7 @@ public class chainedGame extends VariableFrameRateGame{
 		makeBox1(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, 95.3f));
 		makeBox2(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, -39.7f));
 		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 65.2f));
-		makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
+		makeMan(sm, (Vector3)Vector3f.createFrom(9.6f, -1.8f, 178.6f));
 	
 
 		
@@ -240,17 +243,26 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	protected void makeMan(SceneManager sm, Vector3 pos) throws IOException{
-		Entity manE = sm.createEntity("man", "man.obj");
-		manE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manE.getName() + "Node");
+		//SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
+		Entity manSE = sm.createEntity("man", "man.obj");
+		manSE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
 		Texture texMan = this.getEngine().getTextureManager().getAssetByPath("man_tex.png");
 		TextureState texManState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 		texManState.setTexture(texMan);
-		manE.setRenderState(texManState);
-		manN.attachObject(manE);
+		manSE.setRenderState(texManState);
+		manN.attachObject(manSE);
 		manN.scale(1.8f, 1.8f, 1.8f);
 		manN.setLocalPosition(pos);
+		//load animations
+		//manSE.loadAnimation("man_wave", "man_animated.rka");
 	}
+	/*
+	private void doTheWave() {
+		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
+		manSE.stopAnimation();
+		manSE.playAnimation("man_wave", 0.5f, SkeletalEntity.EndType.LOOP, 0);
+	} */
 	
 	protected void makeGoldCoin (SceneManager sm, Vector3 pos) throws IOException {
 		MaterialManager mm = sm.getMaterialManager();
@@ -387,6 +399,8 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 		im.update(elapsTime);
 		orbitController.updateCameraPosition();
+		//SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
+		//manSE.update();
  	}
 	
 	protected void processNetworking(float elapsTime, SceneManager sm) {
@@ -477,7 +491,7 @@ public class chainedGame extends VariableFrameRateGame{
 			playerE.setRenderState(texCarState);
 			playerN.attachObject(playerE);
 			playerN.scale(2f, 2f, 2f);
-			playerN.setLocalPosition(-3.5f, -0.2f, 157.6f);
+			playerN.setLocalPosition(-3.9f, -0.2f, 239.6f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
