@@ -199,12 +199,15 @@ public class chainedGame extends VariableFrameRateGame{
 		makeBox1(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, 95.3f));
 		makeBox2(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, -39.7f));
 		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 65.2f));
-		makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
+		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
 		makeChain(sm, (Vector3)Vector3f.createFrom(-1.9f, 4f, 5.2f));
 
 		//------------Physics-----------//
 		makeGround(sm,(Vector3)Vector3f.createFrom(-1.9f, .5f, 5.2f));
+		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
 		
+		//--------NPCs--------//
+		setupNPC(sm);
 		initPhysicsSystem();
 		createRagePhysicsWorld();
 		
@@ -584,6 +587,22 @@ public class chainedGame extends VariableFrameRateGame{
 			playerN.yaw(Degreef.createFrom(180));
 		}
 		
+	}
+	
+	public void setupNPC(SceneManager sm) throws IOException {
+		Vector3 pos = (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f);
+		Entity manSE = sm.createEntity("man", "man.obj");
+		manSE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
+		Texture texMan = this.getEngine().getTextureManager().getAssetByPath("man_tex.png");
+		TextureState texManState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texManState.setTexture(texMan);
+		manSE.setRenderState(texManState);
+		manN.attachObject(manSE);
+		manN.scale(1.8f, 1.8f, 1.8f);
+		manN.setLocalPosition(pos);
+		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
+		//npcCtrl = new NPCcontroller(manN);
 	}
 	
 	public void setIsConnected(boolean bool) {

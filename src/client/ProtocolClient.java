@@ -25,9 +25,7 @@ public class ProtocolClient extends GameConnectionClient{
 				this.game=game;
 				this.id=UUID.randomUUID();
 				this.ghostAvatars = new ArrayList<GhostAvatar>();
-				
-				long startTime = System.nanoTime();
-				float lastUpdateTime = startTime;
+
 			}
 			@Override
 			protected void processPacket(Object o) {

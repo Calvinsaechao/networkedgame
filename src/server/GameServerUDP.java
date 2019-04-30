@@ -80,6 +80,7 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 				String[] pos = {msgTokens[2], msgTokens[3], msgTokens[4]};
 				sendOrientationMessages(ghostID, pos);
 			}
+			
 		}// main if
 		
 
@@ -158,9 +159,7 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					forwardPacketToAll(message, clientID);
 				}catch(IOException e) {e.printStackTrace();}
 	}
-	
-
-	
+		
 	
 }
 
