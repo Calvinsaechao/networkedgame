@@ -44,6 +44,7 @@ import ray.rml.Vector3;
 import ray.rml.Vector3f;
 import ray.rage.scene.SceneManager;
 import ray.rage.scene.SceneNode;
+import ray.rage.scene.SkeletalEntity;
 import ray.rage.scene.SkyBox;
 import ray.rage.scene.Tessellation;
 
@@ -528,6 +529,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void setupNPC(SceneManager sm) throws IOException {
 		Vector3 pos = (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f);
+		//SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
 		Entity manSE = sm.createEntity("man", "man.obj");
 		manSE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
@@ -540,7 +542,16 @@ public class chainedGame extends VariableFrameRateGame{
 		manN.setLocalPosition(pos);
 		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
 		npcCtrl = new NPCcontroller(manN);
+		//load animations
+		//manSE.loadAnimation("man_wave", "man_animated.rka");
 	}
+	
+	/*
+	private void doTheWave() {
+		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
+		manSE.stopAnimation();
+		manSE.playAnimation("man_wave", 0.5f, SkeletalEntity.EndType.LOOP, 0);
+	}  */
 	
 	public void setIsConnected(boolean bool) {
 		isClientConnected = bool;
