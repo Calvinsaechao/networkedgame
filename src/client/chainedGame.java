@@ -207,6 +207,10 @@ public class chainedGame extends VariableFrameRateGame{
 		//--------NPCs--------//
 		setupNPC(sm);
 		
+		//--------Physics--------//
+		makeGround(sm, (Vector3)Vector3f.createFrom(-1.9f, -0.5f, 40.2f));
+		initPhysicsSystem();
+		createRagePhysicsWorld();
 		
 		//Script Engine
 		ScriptEngineManager factory = new ScriptEngineManager();	
@@ -485,6 +489,7 @@ public class chainedGame extends VariableFrameRateGame{
 				s.setLocalPosition(mat.value(0, 3), mat.value(2, 3), mat.value(2, 3));
 			}
 		}
+		im.update(elapsTime);
 		orbitController.updateCameraPosition();
 		//SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
 		//manSE.update();
