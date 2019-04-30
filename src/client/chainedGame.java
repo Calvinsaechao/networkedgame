@@ -40,11 +40,12 @@ import ray.rage.scene.Camera.Frustum.Projection;
 import ray.rage.scene.Entity;
 import ray.rage.scene.Light;
 import ray.rml.Degreef;
+import ray.rml.Matrix4;
+import ray.rml.Matrix4f;
 import ray.rml.Vector3;
 import ray.rml.Vector3f;
 import ray.rage.scene.SceneManager;
 import ray.rage.scene.SceneNode;
-import ray.rage.scene.SkeletalEntity;
 import ray.rage.scene.SkyBox;
 import ray.rage.scene.Tessellation;
 
@@ -75,6 +76,8 @@ public class chainedGame extends VariableFrameRateGame{
 	private Vector<UUID> gameObjectsToRemove;
 	
 	//physics
+	private final static String GROUND_E = "Ground";
+	private final static String GROUND_N = "GroundNode";
 	private PhysicsEngine physicsEng;
 	
 	public chainedGame(String serverAddr, int sPort) {
@@ -216,12 +219,14 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	private void initPhysicsSystem() {
-		String engine = "ray.physics.Jbullet.JBulletPhysicsEngine";
+		String engine = "ray.physics.JBullet.JBulletPhysicsEngine";
 		float[] gravity = {0, -3f, 0};
 		
 		physicsEng = PhysicsEngineFactory.createPhysicsEngine(engine);
 		physicsEng.initSystem();
 		physicsEng.setGravity(gravity);
+		
+		System.out.println("Initiated physics system...");
 	}
 	
 	private void createRagePhysicsWorld() {
@@ -229,7 +234,43 @@ public class chainedGame extends VariableFrameRateGame{
 		float up[] = {0,1,0};
 		double[] temptf;
 		
+		SceneNode root = getEngine().getSceneManager().getRootSceneNode();
 		
+		SceneNode chainN = (SceneNode)root.getChild("chainNode");
+		temptf = toDoubleArray(chainN.getLocalTransform().toFloatArray());
+		PhysicsObject chainPhysObj = physicsEng.addSphereObject(physicsEng.nextUID(), mass, temptf, 2.0f);
+		chainN.setPhysicsObject(chainPhysObj);
+				
+		SceneNode gndNode = (SceneNode)root.getChild(GROUND_N);
+		temptf = toDoubleArray(gndNode.getLocalTransform().toFloatArray());
+		PhysicsObject gndPlaneP = physicsEng.addStaticPlaneObject(physicsEng.nextUID(),
+																		temptf, up, 0.0f);
+		
+		gndPlaneP.setBounciness(1.0f);
+		gndNode.scale(3f,.05f,3f);
+		gndNode.setPhysicsObject(gndPlaneP);
+		
+		System.out.println("Created physics world...");
+	}
+	
+	private float[] toFloatArray(double[] arr) {
+		if (arr == null) return null;
+		int n = arr.length;
+		float[] ret = new float[n];
+		for (int i = 0; i < n; i++) {
+			ret[i] = (float)arr[i];
+		}
+		return ret;
+	}
+	
+	private double[] toDoubleArray(float[] arr) {
+		if (arr == null) return null;
+		int n = arr.length;
+		double[] ret = new double[n];
+		for (int i = 0; i < n; i++) {
+			ret[i] = (double)arr[i];
+		}
+		return ret;
 	}
 	
 	protected void makePlanet(SceneManager sm, Vector3 pos) throws IOException {
@@ -240,8 +281,12 @@ public class chainedGame extends VariableFrameRateGame{
 		planetN.setLocalPosition(pos);
 	}
 	
-	protected void makeChain(SceneManager sm, Vector3 pos) {
-		
+	protected void makeChain(SceneManager sm, Vector3 pos) throws IOException {
+		Entity chainE = sm.createEntity("chain", "chain.obj");
+		chainE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode chainN = sm.getRootSceneNode().createChildSceneNode(chainE.getName()+"Node");
+		chainN.attachObject(chainE);
+		chainN.setLocalPosition(pos);
 	}
 	
 	protected void makeBox1 (SceneManager sm, Vector3 pos) throws IOException {
@@ -291,6 +336,12 @@ public class chainedGame extends VariableFrameRateGame{
 		manSE.stopAnimation();
 		manSE.playAnimation("man_wave", 0.5f, SkeletalEntity.EndType.LOOP, 0);
 	} */
+	
+	protected void makeGround(SceneManager sm, Vector3 pos) throws IOException {
+		Entity gndE = sm.createEntity(GROUND_E, "cube.obj");
+		SceneNode gndNode = sm.getRootSceneNode().createChildSceneNode(GROUND_N);
+		gndNode.attachObject(gndE);
+	}
 	
 	protected void makeGoldCoin (SceneManager sm, Vector3 pos) throws IOException {
 		MaterialManager mm = sm.getMaterialManager();
@@ -425,7 +476,15 @@ public class chainedGame extends VariableFrameRateGame{
 			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
 			protClient.scaleGhostAvatars(scale);
 		}
-		im.update(elapsTime);
+		Matrix4 mat;
+		physicsEng.update(elapsTime);
+		for(SceneNode s : sm.getSceneNodes()) {
+			if (s.getPhysicsObject()!=null) {
+				mat = Matrix4f.createFrom(toFloatArray(
+						s.getPhysicsObject().getTransform()));
+				s.setLocalPosition(mat.value(0, 3), mat.value(2, 3), mat.value(2, 3));
+			}
+		}
 		orbitController.updateCameraPosition();
 		//SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
 		//manSE.update();
