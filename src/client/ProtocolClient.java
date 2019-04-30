@@ -19,8 +19,6 @@ public class ProtocolClient extends GameConnectionClient{
 	private UUID id;
 	private ArrayList<GhostAvatar> ghostAvatars;
 	
-	private NPCcontroller npcCtrl;
-	
 	public ProtocolClient(InetAddress remAddr, int remPort,
 			ProtocolType pType, chainedGame game) throws IOException{
 				super(remAddr, remPort, pType);
