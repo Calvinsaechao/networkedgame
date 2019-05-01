@@ -85,8 +85,6 @@ public class chainedGame extends VariableFrameRateGame{
 	private final static String GROUND_N = "GroundNode";
 	private PhysicsEngine physicsEng;
 	
-	// NPC state: false = idle, true = waving
-	boolean state = false;
 	
 	public chainedGame(String serverAddr, int sPort) {
 		super();
@@ -659,26 +657,16 @@ public class chainedGame extends VariableFrameRateGame{
 			}
 		}
 	}
-	public void handleNPCcollision(){
-		// call do the waive
-		// false = idle, true = waiving
-		state = true;
-		doTheWave();
-		
-	}
 	
 	public void checkNPCCollision() {
 		Vector3 man1pos = (Vector3)Vector3f.createFrom(31.9f, 1f, 145.07f);
 		for (IPlayer p : players) {
 			Vector3 playerPos = p.getPosition();
 			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
-			float distY = (float) Math.sqrt(Math.pow(playerPos.y()-man1pos.y(),2));
+		//	float distY = (float) Math.sqrt(Math.pow(playerPos.y()-man1pos.y(),2));   this doesn't chage
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
-			//System.out.println(distX);
-			//System.out.println(distZ);
 			if(distX < 25.0f) {
 					if(distZ < 25.0f) {
-						//handleNPCcollision();
 						doTheWave();
 					}
 			}
