@@ -15,6 +15,7 @@ import ActionClasses.*;
 import Controllers.ElevationController;
 import Controllers.NPCcontroller;
 import Controllers.RotationController;
+import InterfaceClasses.IPlayer;
 import net.java.games.input.Controller;
 import net.java.games.input.Event;
 import ray.input.GenericInputManager;
@@ -68,6 +69,9 @@ public class chainedGame extends VariableFrameRateGame{
 	private Camera3PController orbitController;
 	private NPCcontroller npcCtrl;
 	
+	//players
+	private ArrayList<IPlayer> players;
+	
 	//client/server
 	private String serverAddress;
 	private int serverPort;
@@ -90,6 +94,7 @@ public class chainedGame extends VariableFrameRateGame{
 		this.serverPort = sPort;
 		this.serverProtocol = ProtocolType.UDP;
 		scriptFile1 = new File("client\\setGhostParams.js"); //Read up on File Separator
+		this.players = new ArrayList<IPlayer>();
 	}
 	
 	public static void main(String[] args) {
@@ -573,6 +578,7 @@ public class chainedGame extends VariableFrameRateGame{
 			avatar.setNode(ghostN);
 			avatar.setEntity(ghostE);
 			protClient.addGhostAvatar(avatar);**/
+			players.add(avatar);
 		} 
 	}
 	
@@ -592,6 +598,7 @@ public class chainedGame extends VariableFrameRateGame{
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
+			players.add(avatar);
 		}
 		
 	}

@@ -2,12 +2,13 @@ package client;
 
 import java.util.UUID;
 
+import InterfaceClasses.IPlayer;
 import ray.rage.scene.Entity;
 import ray.rage.scene.SceneNode;
 import ray.rml.Vector3;
 import ray.rml.Vector3f;
 
-public class GhostAvatar {
+public class GhostAvatar implements IPlayer{
 	private UUID id;
 	private SceneNode node;
 	private Entity entity;
@@ -37,5 +38,9 @@ public class GhostAvatar {
 	}
 	public void setOrientation(float x, float y, float z) {
 		node.lookAt(Vector3f.createFrom(new float[] {x,y,z}));
+	}
+	
+	public Vector3 getPosition() {
+		return node.getLocalPosition();
 	}
 }
