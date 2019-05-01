@@ -493,7 +493,8 @@ public class chainedGame extends VariableFrameRateGame{
 		im.update(elapsTime);
 		orbitController.updateCameraPosition();
 		SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
-		manSE.update();
+		if (((int)elapsTime)%2==0) {
+			manSE.update(); }
  	}
 	
 	protected void processNetworking(float elapsTime, SceneManager sm) {
@@ -617,7 +618,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private void doTheWave() {
 		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
 		manSE.stopAnimation();
-		manSE.playAnimation("man_wave", 0.5f, SkeletalEntity.EndType.LOOP, 0);
+		manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 0);
 	}  
 	
 	public void setIsConnected(boolean bool) {
