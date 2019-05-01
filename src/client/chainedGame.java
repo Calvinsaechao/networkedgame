@@ -500,6 +500,7 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 		im.update(elapsTime);
 		orbitController.updateCameraPosition();
+		checkNPCCollision();
 		SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
 		if (((int)elapsTime)%2==0) {
 			manSE.update(); }
@@ -621,14 +622,14 @@ public class chainedGame extends VariableFrameRateGame{
 		npcCtrl = new NPCcontroller(manN);
 		//load animations
 		manSE.loadAnimation("man_wave", "man_animated.rka");
-		doTheWave();
+		//doTheWave();
 	}
 	
 	
 	private void doTheWave() {
 		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
 		manSE.stopAnimation();
-		manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 5);
+		manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 3);
 	}  
 	
 	public void setIsConnected(boolean bool) {
@@ -662,20 +663,27 @@ public class chainedGame extends VariableFrameRateGame{
 		// call do the waive
 		// false = idle, true = waiving
 		state = true;
-		//doTheWave();
+		doTheWave();
 		
 	}
 	
 	public void checkNPCCollision() {
-	//	if(/*car within x*/) {
-	//		if(/*car within y*/) {
-	//			if(/*car within z*/) {
-	//				handleNPCcollision();
-	//			}//if3
-	//		}//if2
-	//	}//if1 
-	
+		Vector3 man1pos = (Vector3)Vector3f.createFrom(31.9f, 1f, 145.07f);
+		for (IPlayer p : players) {
+			Vector3 playerPos = p.getPosition();
+			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
+			float distY = (float) Math.sqrt(Math.pow(playerPos.y()-man1pos.y(),2));
+			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
+			//System.out.println(distX);
+			//System.out.println(distZ);
+			if(distX < 25.0f) {
+					if(distZ < 25.0f) {
+						//handleNPCcollision();
+						doTheWave();
+					}
+			}
+		}
 	}
 	
 	
-}
+}// end game
