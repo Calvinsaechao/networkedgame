@@ -81,6 +81,9 @@ public class chainedGame extends VariableFrameRateGame{
 	private final static String GROUND_N = "GroundNode";
 	private PhysicsEngine physicsEng;
 	
+	// NPC state: false = idle, true = waving
+	boolean state = false;
+	
 	public chainedGame(String serverAddr, int sPort) {
 		super();
 		this.serverAddress = serverAddr;
@@ -618,7 +621,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private void doTheWave() {
 		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
 		manSE.stopAnimation();
-		manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 0);
+		manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 5);
 	}  
 	
 	public void setIsConnected(boolean bool) {
@@ -648,4 +651,24 @@ public class chainedGame extends VariableFrameRateGame{
 			}
 		}
 	}
+	public void handleNPCcollision(){
+		// call do the waive
+		// false = idle, true = waiving
+		state = true;
+		//doTheWave();
+		
+	}
+	
+	public void checkNPCCollision() {
+	//	if(/*car within x*/) {
+	//		if(/*car within y*/) {
+	//			if(/*car within z*/) {
+	//				handleNPCcollision();
+	//			}//if3
+	//		}//if2
+	//	}//if1 
+	
+	}
+	
+	
 }
