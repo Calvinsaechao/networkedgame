@@ -636,12 +636,11 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	private void doTheWave() {
 		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
-		//manSE.stopAnimation();
-		if (isClose) { // isClose=true $$ animationStarted=false (init false up top)
+		if (isClose) { 
 			if (animationStarted==false) {
 				manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 3);
 				System.out.println("doing the wave");
-				animationStarted=true;}// animationStarted = true
+				animationStarted=true;}
 		}else {
 			if(animationStarted==true) {
 				//stop 
@@ -682,18 +681,15 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void checkNPCCollision() {
-		float lastUpdateTime = System.nanoTime();
-		float elapsMiliSecs = (System.nanoTime()-lastUpdateTime)/(1000000.0f);
 		Vector3 man1pos = (Vector3)Vector3f.createFrom(31.9f, 1f, 145.07f);
 		for (IPlayer p : players) {
 			Vector3 playerPos = p.getPosition();
 			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
-		//	float distY = (float) Math.sqrt(Math.pow(playerPos.y()-man1pos.y(),2));   this doesn't chage
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
 			if(distX <= 25.0f) {
 					if(distZ <= 25.0f) {
 						isClose = true;
-						System.out.println("isWaving=true");
+						//System.out.println("isWaving=true");
 						doTheWave();
 					}
 			}else {
