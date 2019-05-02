@@ -85,6 +85,10 @@ public class chainedGame extends VariableFrameRateGame{
 	private final static String GROUND_N = "GroundNode";
 	private PhysicsEngine physicsEng;
 	
+	// NPC state
+	boolean isClose = false;
+	boolean animationStarted = false;
+	
 	
 	public chainedGame(String serverAddr, int sPort) {
 		super();
@@ -632,8 +636,21 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	private void doTheWave() {
 		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
-		manSE.stopAnimation();
-		manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 3);
+		//manSE.stopAnimation();
+		if (isClose) { // isClose=true $$ animationStarted=false (init false up top)
+			if (animationStarted==false) {
+				manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 3);
+				System.out.println("doing the wave");
+				animationStarted=true;}// animationStarted = true
+		}else {
+			if(animationStarted==true) {
+				//stop 
+				manSE.stopAnimation();
+				animationStarted=false;
+			}
+		}
+		
+		System.out.println("doing the wave");
 	}  
 	
 	public void setIsConnected(boolean bool) {
@@ -665,6 +682,8 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void checkNPCCollision() {
+		float lastUpdateTime = System.nanoTime();
+		float elapsMiliSecs = (System.nanoTime()-lastUpdateTime)/(1000000.0f);
 		Vector3 man1pos = (Vector3)Vector3f.createFrom(31.9f, 1f, 145.07f);
 		for (IPlayer p : players) {
 			Vector3 playerPos = p.getPosition();
@@ -673,8 +692,12 @@ public class chainedGame extends VariableFrameRateGame{
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
 			if(distX <= 25.0f) {
 					if(distZ <= 25.0f) {
+						isClose = true;
+						System.out.println("isWaving=true");
 						doTheWave();
 					}
+			}else {
+				isClose=false;
 			}
 			
 		}
