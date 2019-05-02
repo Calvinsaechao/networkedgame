@@ -22,9 +22,9 @@ public class MoveBackwardAction extends AbstractInputAction {
 		game.updateVerticalPosition();
 		protClient.sendMoveMessage(avN.getWorldPosition());
 		
-		System.out.println("X" + avN.getWorldPosition().x());
-		System.out.println("Y" + avN.getWorldPosition().y());
-		System.out.println("Z" + avN.getWorldPosition().z());
+		//System.out.println("X" + avN.getWorldPosition().x());
+		//System.out.println("Y" + avN.getWorldPosition().y());
+		//System.out.println("Z" + avN.getWorldPosition().z());
 	}
 
 }

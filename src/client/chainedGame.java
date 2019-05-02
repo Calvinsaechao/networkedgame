@@ -498,8 +498,8 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 		im.update(elapsTime);
 		orbitController.updateCameraPosition();
-		checkNPCCollision();
 		SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
+		checkNPCCollision();
 		if (((int)elapsTime)%2==0) {
 			manSE.update(); }
  	}
@@ -665,11 +665,12 @@ public class chainedGame extends VariableFrameRateGame{
 			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
 		//	float distY = (float) Math.sqrt(Math.pow(playerPos.y()-man1pos.y(),2));   this doesn't chage
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
-			if(distX < 25.0f) {
-					if(distZ < 25.0f) {
+			if(distX <= 25.0f) {
+					if(distZ <= 25.0f) {
 						doTheWave();
 					}
 			}
+			
 		}
 	}
 	
