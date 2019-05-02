@@ -215,7 +215,7 @@ public class chainedGame extends VariableFrameRateGame{
 		setupNPC(sm);
 		
 		//--------Physics--------//
-		makeGround(sm, (Vector3)Vector3f.createFrom(-1.9f, -0.5f, 40.2f));
+		makeGround(sm, (Vector3)Vector3f.createFrom(-1.9f, 0f, 40.2f));
 		initPhysicsSystem();
 		createRagePhysicsWorld();
 		
@@ -231,13 +231,11 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	private void initPhysicsSystem() {
 		String engine = "ray.physics.JBullet.JBulletPhysicsEngine";
-		float[] gravity = {0, -3f, 0};
+		float[] gravity = {0, -20f, 0};
 		
 		physicsEng = PhysicsEngineFactory.createPhysicsEngine(engine);
 		physicsEng.initSystem();
 		physicsEng.setGravity(gravity);
-		
-		System.out.println("Initiated physics system...");
 	}
 	
 	private void createRagePhysicsWorld() {
@@ -250,6 +248,7 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode chainN = (SceneNode)root.getChild("chainNode");
 		temptf = toDoubleArray(chainN.getLocalTransform().toFloatArray());
 		PhysicsObject chainPhysObj = physicsEng.addSphereObject(physicsEng.nextUID(), mass, temptf, 2.0f);
+		chainPhysObj.setBounciness(1.0f);
 		chainN.setPhysicsObject(chainPhysObj);
 				
 		SceneNode gndNode = (SceneNode)root.getChild(GROUND_N);
@@ -487,16 +486,23 @@ public class chainedGame extends VariableFrameRateGame{
 			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
 			protClient.scaleGhostAvatars(scale);
 		}
+		
+		// PHYSICS
+		
 		Matrix4 mat;
-		physicsEng.update(elapsTime);
+		physicsEng.update(engine.getElapsedTimeMillis());
 		for(SceneNode s : sm.getSceneNodes()) {
 			if (s.getPhysicsObject()!=null) {
 				mat = Matrix4f.createFrom(toFloatArray(
 						s.getPhysicsObject().getTransform()));
-				s.setLocalPosition(mat.value(0, 3), mat.value(2, 3), mat.value(2, 3));
+				s.setLocalPosition(mat.value(0, 3), mat.value(1, 3), mat.value(2, 3));
 			}
 		}
+		
+		
 		im.update(elapsTime);
+		
+		// NPC
 		orbitController.updateCameraPosition();
 		SkeletalEntity manSE = (SkeletalEntity)engine.getSceneManager().getEntity("man");
 		checkNPCCollision();
