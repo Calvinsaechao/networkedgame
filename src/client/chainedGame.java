@@ -639,17 +639,20 @@ public class chainedGame extends VariableFrameRateGame{
 		if (isClose) { 
 			if (animationStarted==false) {
 				manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 3);
-				System.out.println("doing the wave");
-				animationStarted=true;}
+				//System.out.println("doing the wave");
+				animationStarted=true;
+				//System.out.println("anim=true");
+				}
 		}else {
 			if(animationStarted==true) {
 				//stop 
+				//System.out.println("anim is true - stop");
 				manSE.stopAnimation();
 				animationStarted=false;
+				//System.out.println("anim=false");
 			}
 		}
-		
-		System.out.println("doing the wave");
+		//System.out.println("doing the wave");
 	}  
 	
 	public void setIsConnected(boolean bool) {
