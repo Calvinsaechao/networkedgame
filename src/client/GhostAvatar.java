@@ -9,7 +9,7 @@ import ray.rml.Vector3;
 import ray.rml.Vector3f;
 
 public class GhostAvatar implements IPlayer{
-	private UUID id;
+	private static UUID id;
 	private SceneNode node;
 	private Entity entity;
 	
@@ -17,7 +17,7 @@ public class GhostAvatar implements IPlayer{
 		this.id=id;
 	}
 	
-	public UUID getID() {
+	public static UUID getID() {
 		return id;
 	}
 	

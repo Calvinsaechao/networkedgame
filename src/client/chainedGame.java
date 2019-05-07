@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
 
+import ray.physics.PhysicsBallSocketConstraint;
 import ray.physics.PhysicsEngine;
 import ray.physics.PhysicsObject;
 import ray.physics.PhysicsEngineFactory;
@@ -18,6 +19,12 @@ import Controllers.RotationController;
 import InterfaceClasses.IPlayer;
 import net.java.games.input.Controller;
 import net.java.games.input.Event;
+import ray.audio.AudioManagerFactory;
+import ray.audio.AudioResource;
+import ray.audio.AudioResourceType;
+import ray.audio.IAudioManager;
+import ray.audio.Sound;
+import ray.audio.SoundType;
 import ray.input.GenericInputManager;
 import ray.input.InputManager;
 import ray.input.action.AbstractInputAction;
@@ -71,6 +78,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	//players
 	private ArrayList<IPlayer> players;
+	private SceneNode playerN, manN, cameraN;
 	
 	//client/server
 	private String serverAddress;
@@ -88,6 +96,10 @@ public class chainedGame extends VariableFrameRateGame{
 	// NPC state
 	boolean isClose = false;
 	boolean animationStarted = false;
+	
+	// Sound
+	IAudioManager audioMgr;
+	Sound helloSound, carSound, crashSound;
 	
 	
 	public chainedGame(String serverAddr, int sPort) {
@@ -231,6 +243,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		setupInputs();
 		setupOrbitCameras(eng, sm);
+		initAudio(sm);
 	}
 	
 	private void initPhysicsSystem() {
@@ -246,6 +259,8 @@ public class chainedGame extends VariableFrameRateGame{
 		float mass = 1.0f;
 		float up[] = {0,1,0};
 		double[] temptf;
+		float[] size = {2.0f, 2.0f, 2.0f};
+		UUID ghostID = (UUID)GhostAvatar.getID();
 		
 		SceneNode root = getEngine().getSceneManager().getRootSceneNode();
 		
@@ -264,6 +279,15 @@ public class chainedGame extends VariableFrameRateGame{
 		gndNode.scale(3f,.05f,3f);
 		gndNode.setPhysicsObject(gndPlaneP);
 		
+		SceneNode carBlue = (SceneNode)root.getChild("playerNode");
+		temptf = toDoubleArray(carBlue.getLocalTransform().toFloatArray());
+		PhysicsObject carBlueP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
+		
+		SceneNode carYellow = (SceneNode)root.getChild(ghostID.toString() + "Node");
+		temptf = toDoubleArray(carYellow.getLocalTransform().toFloatArray());
+		PhysicsObject carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
+		
+		PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carBlueP, carYellowP);
 		System.out.println("Created physics world...");
 	}
 	
@@ -344,12 +368,7 @@ public class chainedGame extends VariableFrameRateGame{
 		//load animations
 		//manSE.loadAnimation("man_wave", "man_animated.rka");
 	}
-	/*
-	private void doTheWave() {
-		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
-		manSE.stopAnimation();
-		manSE.playAnimation("man_wave", 0.5f, SkeletalEntity.EndType.LOOP, 0);
-	} */
+	
 	
 	protected void makeGround(SceneManager sm, Vector3 pos) throws IOException {
 		Entity gndE = sm.createEntity(GROUND_E, "cube.obj");
@@ -457,7 +476,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	protected void setupOrbitCameras(Engine eng, SceneManager sm) {
 		SceneNode avatarN = sm.getSceneNode("playerNode");
-    	SceneNode cameraN = sm.getSceneNode("MainCameraNode");
+    	cameraN = sm.getSceneNode("MainCameraNode");
     	Camera camera = sm.getCamera("MainCamera");
     	camera.setMode('n');
     	cameraN.moveBackward(3f);
@@ -577,16 +596,6 @@ public class chainedGame extends VariableFrameRateGame{
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
 			protClient.addGhostAvatar(avatar);
-			/**Entity ghostE = sm.createEntity(avatar.getID().toString(), "cube.obj");
-			ghostE.setPrimitive(Primitive.TRIANGLES);
-			SceneNode ghostN = sm.getRootSceneNode().createChildSceneNode(avatar.getID().toString());
-			ghostN.attachObject(ghostE);
-			ghostN.setLocalPosition(0, 0, 0);
-			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
-			ghostN.scale(Vector3f.createFrom(scale,scale,scale));
-			avatar.setNode(ghostN);
-			avatar.setEntity(ghostE);
-			protClient.addGhostAvatar(avatar);**/
 			players.add(avatar);
 		} 
 	}
@@ -595,7 +604,7 @@ public class chainedGame extends VariableFrameRateGame{
 		if (avatar != null) {
 			Entity playerE = sm.createEntity("player", "car_model.obj");
 			playerE.setPrimitive(Primitive.TRIANGLES);
-			SceneNode playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
+			playerN = sm.getRootSceneNode().createChildSceneNode("playerNode");
 			Material carMat = this.getEngine().getMaterialManager().getAssetByPath("car_model.mtl");
 			Texture texCar = this.getEngine().getTextureManager().getAssetByPath("car_tex.png");
 			TextureState texCarState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
@@ -617,7 +626,7 @@ public class chainedGame extends VariableFrameRateGame{
 		SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
 		//Entity manSE = sm.createEntity("man", "man.obj");
 		manSE.setPrimitive(Primitive.TRIANGLES);
-		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
+		manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
 		Texture texMan = this.getEngine().getTextureManager().getAssetByPath("man_animated.png");
 		TextureState texManState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
 		texManState.setTexture(texMan);
@@ -702,5 +711,54 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 	}
 	
+	public void initAudio(SceneManager sm) {
+		AudioResource resource1, resource2, resource3;
+		audioMgr = AudioManagerFactory.createAudioManager("ray.audio.joal.JOALAudioManager");
+		if (!audioMgr.initialize()) {
+			System.out.println("Audio Manager failed to initialize! ");
+			return;
+		}
+		resource1 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
+		resource2 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
+		resource3 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
+		
+		helloSound = new Sound (resource1, SoundType.SOUND_EFFECT, 100, true);
+		carSound = new Sound (resource2, SoundType.SOUND_EFFECT, 100, true);
+		crashSound = new Sound (resource3, SoundType.SOUND_EFFECT, 100, true);
+		
+		helloSound.initialize(audioMgr);
+		carSound.initialize(audioMgr);
+		crashSound.initialize(audioMgr);
+		
+		helloSound.setMaxDistance(10.0f);
+		helloSound.setMinDistance(0.5f);
+		helloSound.setRollOff(5.0f);
+		
+		carSound.setMaxDistance(10.0f);
+		carSound.setMinDistance(0.5f);
+		carSound.setRollOff(5.0f);
+		
+		crashSound.setMaxDistance(10.0f);
+		crashSound.setMinDistance(0.5f);
+		crashSound.setRollOff(5.0f);
+		
+		SceneNode carN = sm.getSceneNode("playerNode");
+		SceneNode manN = sm.getSceneNode("manNode");
+		carSound.setLocation(carN.getWorldPosition());
+		helloSound.setLocation(manN.getWorldPosition());
+		setEarParameters(sm);
+		
+		helloSound.play();
+		carSound.play();
+		
+	}
+	
+	public void setEarParameters(SceneManager sm) {
+		SceneNode cameraN = sm.getSceneNode("MainCameraNode");
+		Vector3 camDir = cameraN.getWorldForwardAxis();
+		
+		audioMgr.getEar().setLocation(cameraN.getWorldPosition());
+		audioMgr.getEar().setOrientation(camDir, Vector3f.createFrom(0,1,0));
+		}
 	
 }// end game
