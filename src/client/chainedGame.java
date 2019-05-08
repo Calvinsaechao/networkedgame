@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.lang.Integer;
 
 import ray.physics.PhysicsBallSocketConstraint;
 import ray.physics.PhysicsEngine;
@@ -66,7 +67,8 @@ import java.io.*;
 
 public class chainedGame extends VariableFrameRateGame{
 	GL4RenderSystem rs;
-	float elapsTime = 0.0f;
+	float elapsTime = 0.0f, elapsTimeSec;
+	String elapsTimeStr,dispStr;
 	private GenericInputManager im;
 	private SceneManager sm;
 	private static final String SKYBOX_NAME = "SkyBox";
@@ -243,7 +245,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		setupInputs();
 		setupOrbitCameras(eng, sm);
-		initAudio(sm);
+		//initAudio(sm);
 	}
 	
 	private void initPhysicsSystem() {
@@ -500,6 +502,10 @@ public class chainedGame extends VariableFrameRateGame{
 		rs = (GL4RenderSystem) engine.getRenderSystem();
 		SceneManager sm = engine.getSceneManager();
 		elapsTime += engine.getElapsedTimeMillis();
+		elapsTimeSec = Math.round(elapsTime/1000.0f);
+		elapsTimeStr = Integer.toString((int) elapsTimeSec);
+		dispStr = "PLAYER 1 SCORE: " + elapsTimeStr + "   PLAYER 2 SCORE: " + elapsTimeStr;  
+		rs.setHUD(dispStr, 15, 15);
 		processNetworking(elapsTime, sm);
 		long modTime = scriptFile1.lastModified();
 		if(modTime > fileLastModifiedTime) {
