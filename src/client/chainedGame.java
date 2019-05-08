@@ -284,12 +284,13 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode carBlue = (SceneNode)root.getChild("playerNode");
 		temptf = toDoubleArray(carBlue.getLocalTransform().toFloatArray());
 		PhysicsObject carBlueP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-		
+		if (players.size()>=2) {
 		SceneNode carYellow = (SceneNode)root.getChild(ghostID.toString() + "Node");
-		temptf = toDoubleArray(carYellow.getLocalTransform().toFloatArray());
-		PhysicsObject carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-		
-		PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carBlueP, carYellowP);
+			temptf = toDoubleArray(carYellow.getLocalTransform().toFloatArray());
+			PhysicsObject carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
+			PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carBlueP, carYellowP);
+			System.out.println("Ball socket created...");
+		}
 		System.out.println("Created physics world...");
 	}
 	
@@ -597,7 +598,7 @@ public class chainedGame extends VariableFrameRateGame{
 			playerN.attachObject(playerE);
 			playerN.scale(2.3f, 2.3f, 2.3f);
 			//playerN.moveUp(0.3f);
-			playerN.setLocalPosition(-3.5f, -0.2f, 157.6f);
+			playerN.setLocalPosition(-3.5f, -0.2f, 239.6f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
