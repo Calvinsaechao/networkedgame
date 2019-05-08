@@ -245,7 +245,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		setupInputs();
 		setupOrbitCameras(eng, sm);
-		//initAudio(sm);
+		initAudio(sm);
 	}
 	
 	private void initPhysicsSystem() {
@@ -725,29 +725,29 @@ public class chainedGame extends VariableFrameRateGame{
 			System.out.println("Audio Manager failed to initialize! ");
 			return;
 		}
-		resource1 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
-		resource2 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
-		resource3 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
+		//resource1 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
+		resource2 = audioMgr.createAudioResource("assets/sounds/car_moving_loop.wav", AudioResourceType.AUDIO_SAMPLE);
+		//resource3 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
 		
-		helloSound = new Sound (resource1, SoundType.SOUND_EFFECT, 100, true);
+		//helloSound = new Sound (resource1, SoundType.SOUND_EFFECT, 100, true);
 		carSound = new Sound (resource2, SoundType.SOUND_EFFECT, 100, true);
-		crashSound = new Sound (resource3, SoundType.SOUND_EFFECT, 100, true);
+		//crashSound = new Sound (resource3, SoundType.SOUND_EFFECT, 100, true);
 		
-		helloSound.initialize(audioMgr);
+		//helloSound.initialize(audioMgr);
 		carSound.initialize(audioMgr);
-		crashSound.initialize(audioMgr);
+		//crashSound.initialize(audioMgr);
 		
-		helloSound.setMaxDistance(10.0f);
-		helloSound.setMinDistance(0.5f);
-		helloSound.setRollOff(5.0f);
+		//helloSound.setMaxDistance(10.0f);
+		//helloSound.setMinDistance(0.5f);
+		//helloSound.setRollOff(5.0f);
 		
 		carSound.setMaxDistance(10.0f);
 		carSound.setMinDistance(0.5f);
 		carSound.setRollOff(5.0f);
 		
-		crashSound.setMaxDistance(10.0f);
-		crashSound.setMinDistance(0.5f);
-		crashSound.setRollOff(5.0f);
+		//crashSound.setMaxDistance(10.0f);
+		//crashSound.setMinDistance(0.5f);
+		//crashSound.setRollOff(5.0f);
 		
 		SceneNode carN = sm.getSceneNode("playerNode");
 		SceneNode manN = sm.getSceneNode("manNode");
@@ -755,7 +755,7 @@ public class chainedGame extends VariableFrameRateGame{
 		helloSound.setLocation(manN.getWorldPosition());
 		setEarParameters(sm);
 		
-		helloSound.play();
+		//helloSound.play();
 		carSound.play();
 		
 	}
