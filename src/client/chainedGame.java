@@ -94,6 +94,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private final static String GROUND_E = "Ground";
 	private final static String GROUND_N = "GroundNode";
 	private PhysicsEngine physicsEng;
+	PhysicsObject carBlueP, carYellowP;
 	
 	// NPC state
 	boolean isClose = false;
@@ -245,7 +246,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		setupInputs();
 		setupOrbitCameras(eng, sm);
-		initAudio(sm);
+		//initAudio(sm);
 	}
 	
 	private void initPhysicsSystem() {
@@ -280,17 +281,7 @@ public class chainedGame extends VariableFrameRateGame{
 		gndPlaneP.setBounciness(1.0f);
 		gndNode.scale(3f,.05f,3f);
 		gndNode.setPhysicsObject(gndPlaneP);
-		
-		SceneNode carBlue = (SceneNode)root.getChild("playerNode");
-		temptf = toDoubleArray(carBlue.getLocalTransform().toFloatArray());
-		PhysicsObject carBlueP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-		if (players.size()>=2) {
-		SceneNode carYellow = (SceneNode)root.getChild(ghostID.toString() + "Node");
-			temptf = toDoubleArray(carYellow.getLocalTransform().toFloatArray());
-			PhysicsObject carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-			PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carBlueP, carYellowP);
-			System.out.println("Ball socket created...");
-		}
+	
 		System.out.println("Created physics world...");
 	}
 	
@@ -584,7 +575,9 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void addGhostAvatarToGameWorld(GhostAvatar avatar) throws IOException{
-		
+		double[] temptf;
+		float mass = 1.0f;
+		float[] size = {2.0f, 2.0f, 2.0f};
 		
 		if (avatar != null) {  
 			Entity playerE = sm.createEntity(avatar.getID().toString(), "ghost_model.obj");
@@ -604,10 +597,17 @@ public class chainedGame extends VariableFrameRateGame{
 			playerN.yaw(Degreef.createFrom(180));
 			protClient.addGhostAvatar(avatar);
 			players.add(avatar);
+			temptf = toDoubleArray(playerN.getLocalTransform().toFloatArray());
+			carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
+			PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carBlueP, carYellowP);
+			System.out.println("Ball socket created...");
 		} 
 	}
 	
 	public void addAvatarToGameWorld(Avatar avatar, SceneManager sm) throws IOException{
+		double[] temptf;
+		float mass = 1.0f;
+		float[] size = {2.0f, 2.0f, 2.0f};
 		if (avatar != null) {
 			Entity playerE = sm.createEntity("player", "car_model.obj");
 			playerE.setPrimitive(Primitive.TRIANGLES);
@@ -624,6 +624,11 @@ public class chainedGame extends VariableFrameRateGame{
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
 			players.add(avatar);
+			//Physics
+			//SceneNode carBlue = (SceneNode) sm.getRootSceneNode().getChild("playerNode");
+			temptf = toDoubleArray(playerN.getLocalTransform().toFloatArray());
+			carBlueP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
+			playerN.setPhysicsObject(carBlueP);
 		}
 		
 	}
