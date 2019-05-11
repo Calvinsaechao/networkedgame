@@ -52,7 +52,12 @@ public class ProtocolClient extends GameConnectionClient{
 						UUID ghostID = UUID.fromString(msgTokens[1]);
 						removeGhostAvatar(ghostID);
 					}
-					
+					/*
+					if(msgTokens[0].compareTo("moveCar") == 0) {
+						//format: moveCar
+						sendMoveMessage(moveCar(id));
+					}
+					*/
 					if((msgTokens[0].compareTo("dsfr") == 0)
 						|| (msgTokens[0].compareTo("create") == 0)){
 							//format: create, remoteId, x,y,z or dsfr, remoteID, x,y,z
@@ -95,7 +100,7 @@ public class ProtocolClient extends GameConnectionClient{
 					//add more messages
 				}
 			}
-			private GhostAvatar getAvatar(UUID id) {
+			private GhostAvatar getGhostAvatar(UUID id) {
 				Iterator<GhostAvatar> it = (Iterator<GhostAvatar>)ghostAvatars.iterator();
 				GhostAvatar ghostAvatar = null;
 				while(it.hasNext()) {
@@ -107,11 +112,11 @@ public class ProtocolClient extends GameConnectionClient{
 				return null;
 			}
 			private void updateAvatarPosition(UUID ghostID, Vector3 ghostPosition) {
-				game.updateGhostAvatarPosition(getAvatar(ghostID), ghostPosition);
+				game.updateGhostAvatarPosition(getGhostAvatar(ghostID), ghostPosition);
 				
 			}
 			private void updateAvatarOrientation(UUID ghostID, Vector3 ghostPosition) {
-				game.updateAvatarOrientation(getAvatar(ghostID), ghostPosition);
+				game.updateAvatarOrientation(getGhostAvatar(ghostID), ghostPosition);
 			}
 			public void sendJoinMessage() {
 				try {
@@ -196,6 +201,10 @@ public class ProtocolClient extends GameConnectionClient{
 			public UUID getID() {
 				return id;
 			}
+			/*
+			public Vector3 moveCar(UUID id) {
+				return game.moveCar(id);
+			} */
 			
 			public void sendByeMessage() {
 				//format: bye, clientID

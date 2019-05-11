@@ -1,5 +1,6 @@
 package server;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,9 +9,11 @@ import ray.networking.server.GameConnectionServer;
 import ray.networking.server.IClientInfo;
 
 public class GameServerUDP extends GameConnectionServer<UUID> {
+	private ArrayList<UUID> players;
 
 	public GameServerUDP(int localPort) throws IOException {
 		super(localPort, ProtocolType.UDP);
+		players = new ArrayList<UUID>();
 	}
 	
 	@Override
@@ -29,6 +32,9 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					addClient(ci, clientID);
 					sendJoinedMessage(clientID, true);
 					System.out.println(clientID.toString() +" has connected.");
+					players.add(clientID);
+				//	if (players.size() > 1)
+				//		sendMoveCarMessage(clientID);
 				}catch(IOException e) {e.printStackTrace();}
 			}
 			
@@ -148,6 +154,14 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					forwardPacketToAll(message, clientID);
 				}catch(IOException e) {e.printStackTrace();}
 	}
+	/*
+	private void sendMoveCarMessage(UUID clientID) {
+		// format: moveCar
+		try {
+			String message = new String("moveCar");
+			sendPacket(message, clientID);
+		}catch(IOException e) {e.printStackTrace();}
+	} */
 	
 	private void sendOrientationMessages(UUID clientID, String[] pos) {
 		// format : move, clientID, x,y,z

@@ -95,6 +95,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private final static String GROUND_N = "GroundNode";
 	private PhysicsEngine physicsEng;
 	PhysicsObject carBlueP, carYellowP;
+	PhysicsObject chainPhysObj;
 	
 	// NPC state
 	boolean isClose = false;
@@ -205,6 +206,30 @@ public class chainedGame extends VariableFrameRateGame{
 		plightNode.attachObject(plight);
 		plightNode.setLocalPosition(1f,1f, 1f);
 		
+		Light dlight = sm.createLight("testLamp2", Light.Type.SPOT);
+	    dlight.setAmbient(new Color(0.2f, 0.2f, 0.2f));
+	    dlight.setDiffuse(new Color(0.5f, 0.5f, 0.5f));
+	    dlight.setSpecular(new Color(1.0f, 1.0f, 1.0f));
+	    dlight.setRange(20.0f);
+	    dlight.setVisible(true);
+		SceneNode dlightNode = sm.getRootSceneNode().createChildSceneNode("dlightNode");
+	    dlightNode.attachObject(dlight);
+	    dlightNode.moveUp(2.5f);
+		
+		//--------Relative Objects--------//
+		
+		makeBox1(sm, (Vector3)Vector3f.createFrom(2.04f, -2.27f, 255f));
+		makeBox2(sm, (Vector3)Vector3f.createFrom(-76.65f, -2.27f, 66.66f));
+		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(2.04f, -1.0f, 66.66f));
+		makeGoldCoin2(sm, (Vector3)Vector3f.createFrom(-76.65f, -1.0f, 255f));
+				//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
+		makeChain(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 40.2f));
+		
+		//--------Physics--------//
+		makeGround(sm, (Vector3)Vector3f.createFrom(-1.9f, 0f, 40.2f));
+		initPhysicsSystem();
+		createRagePhysicsWorld();
+		
 		//-------------Avatars-------------//
 		Vector3f playerApos = (Vector3f)Vector3f.createFrom(-2.0f, 0f, 204f);
 		Avatar playerA = new Avatar(protClient.getID(), playerApos);
@@ -212,31 +237,20 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		//-------------Terrain-------------//
 		Tessellation tessE = sm.createTessellation("tessE", 7);
-		tessE.setSubdivisions(8f);
+		tessE.setSubdivisions(9f);
 		SceneNode tessN = sm.getRootSceneNode().createChildSceneNode("tessN");
 		tessN.attachObject(tessE);
 		tessN.translate(Vector3f.createFrom(-6.2f,-2.2f,2.7f));
 		//tessN.yaw(Degreef.createFrom(37.2f));
-		tessN.scale(600, 1200, 600);
+		tessN.scale(900, 1800, 900);
 		tessE.setHeightMap(this.getEngine(), "height_map.png");
 		tessE.setTexture(this.getEngine(), "road1.png");
 		tessE.setNormalMap(this.getEngine(), "normal_map.png");
 		
-		//--------Relative Objects--------//
-		
-		makeBox1(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, 95.3f));
-		makeBox2(sm, (Vector3)Vector3f.createFrom(-26.5f, -2.27f, -39.7f));
-		makeGoldCoin(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 65.2f));
-		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
-		makeChain(sm, (Vector3)Vector3f.createFrom(-1.9f, -1.0f, 40.2f));
-		
 		//--------NPCs--------//
 		setupNPC(sm);
 		
-		//--------Physics--------//
-		makeGround(sm, (Vector3)Vector3f.createFrom(-1.9f, 0f, 40.2f));
-		initPhysicsSystem();
-		createRagePhysicsWorld();
+		
 		
 		//Script Engine
 		ScriptEngineManager factory = new ScriptEngineManager();	
@@ -269,8 +283,8 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		SceneNode chainN = (SceneNode)root.getChild("chainNode");
 		temptf = toDoubleArray(chainN.getLocalTransform().toFloatArray());
-		PhysicsObject chainPhysObj = physicsEng.addSphereObject(physicsEng.nextUID(), mass, temptf, 2.0f);
-		chainPhysObj.setBounciness(1.0f);
+		chainPhysObj = physicsEng.addSphereObject(physicsEng.nextUID(), mass, temptf, 2.0f);
+		//chainPhysObj.setBounciness(1.0f);
 		chainN.setPhysicsObject(chainPhysObj);
 				
 		SceneNode gndNode = (SceneNode)root.getChild(GROUND_N);
@@ -382,9 +396,27 @@ public class chainedGame extends VariableFrameRateGame{
 		goldCoinN.attachObject(goldCoinE);
 		goldCoinN.setLocalPosition(pos);
 		Material goldCoinMat = mm.getAssetByName("goldcoin.mtl");
-		//goldCoinMat.setDiffuse(Color.getHSBColor(0.64f, 0.64f, 0.64f));
-		//goldCoinMat.setAmbient(Color.getHSBColor(1f, 1f, 1f));
-		//goldCoinMat.setSpecular(Color.getHSBColor(.5f, .5f, .5f));
+		goldCoinMat.setShininess(1f);
+		goldCoinE.setMaterial(goldCoinMat);
+		goldCoinN.scale(2.5f,2.5f,2.5f);
+		
+		//Node controller
+		setupElevationController(goldCoinN, sm);
+		setupRotationController(goldCoinN, sm);
+	}
+	
+	protected void makeGoldCoin2 (SceneManager sm, Vector3 pos) throws IOException {
+		MaterialManager mm = sm.getMaterialManager();
+		Entity goldCoinE = sm.createEntity("goldCoin2", "goldcoin.obj");
+		goldCoinE.setPrimitive(Primitive.TRIANGLES);
+		SceneNode goldCoinN = sm.getRootSceneNode().createChildSceneNode(goldCoinE.getName() + "Node");
+		Texture texGoldCoin = this.getEngine().getTextureManager().getAssetByPath("goldcoin.png");
+		TextureState texGoldCoinState = (TextureState)sm.getRenderSystem().createRenderState(RenderState.Type.TEXTURE);
+		texGoldCoinState.setTexture(texGoldCoin);
+		goldCoinE.setRenderState(texGoldCoinState);
+		goldCoinN.attachObject(goldCoinE);
+		goldCoinN.setLocalPosition(pos);
+		Material goldCoinMat = mm.getAssetByName("goldcoin.mtl");
 		goldCoinMat.setShininess(1f);
 		goldCoinE.setMaterial(goldCoinMat);
 		goldCoinN.scale(2.5f,2.5f,2.5f);
@@ -591,16 +623,21 @@ public class chainedGame extends VariableFrameRateGame{
 			playerN.attachObject(playerE);
 			playerN.scale(2.3f, 2.3f, 2.3f);
 			//playerN.moveUp(0.3f);
-			playerN.setLocalPosition(-3.5f, -0.2f, 239.6f);
+			playerN.setLocalPosition(-76.65f, -0.2f, 357f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
 			protClient.addGhostAvatar(avatar);
 			players.add(avatar);
-			temptf = toDoubleArray(playerN.getLocalTransform().toFloatArray());
+			//Physics
+			/**
+			SceneNode carYellow = playerN.createChildSceneNode("physicsCarY");
+			temptf = toDoubleArray(carYellow.getLocalTransform().toFloatArray());
 			carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-			PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carBlueP, carYellowP);
+			//PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carYellowP, chainPhysObj);
+			
 			System.out.println("Ball socket created...");
+			**/
 		} 
 	}
 	
@@ -619,22 +656,28 @@ public class chainedGame extends VariableFrameRateGame{
 			playerE.setRenderState(texCarState);
 			playerN.attachObject(playerE);
 			playerN.scale(2.3f, 2.3f, 2.3f);
-			playerN.setLocalPosition(-3.9f, -0.2f, 239.6f);
+			playerN.setLocalPosition(2.04f, -0.2f, 357f);
 			avatar.setNode(playerN);
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
 			players.add(avatar);
-			//Physics
-			//SceneNode carBlue = (SceneNode) sm.getRootSceneNode().getChild("playerNode");
+			//Physics //
+			
+			SceneNode carBlue = playerN.createChildSceneNode("physicsCarB");
 			temptf = toDoubleArray(playerN.getLocalTransform().toFloatArray());
 			carBlueP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-			playerN.setPhysicsObject(carBlueP);
+			carBlue.setPhysicsObject(carBlueP);
+
+			PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), chainPhysObj, carBlueP);
+			connection.getBodyA().setTransform(temptf);
+			System.out.println("I dont know...");  
+		
 		}
 		
 	}
 	
 	public void setupNPC(SceneManager sm) throws IOException {
-		Vector3 pos = (Vector3)Vector3f.createFrom(31.9f, 1f, 145.07f);
+		Vector3 pos = (Vector3)Vector3f.createFrom(52.04f, 1f, 255.9f);
 		SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
 		//Entity manSE = sm.createEntity("man", "man.obj");
 		manSE.setPrimitive(Primitive.TRIANGLES);
@@ -710,8 +753,8 @@ public class chainedGame extends VariableFrameRateGame{
 			Vector3 playerPos = p.getPosition();
 			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
-			if(distX <= 25.0f) {
-					if(distZ <= 25.0f) {
+			if(distX <= 100.0f) {
+					if(distZ <= 100.0f) {
 						isClose = true;
 						//System.out.println("isWaving=true");
 						doTheWave();
@@ -763,6 +806,18 @@ public class chainedGame extends VariableFrameRateGame{
 		//helloSound.play();
 		carSound.play();
 		
+	}
+	
+	public Vector3 moveCar(UUID id) {
+		Iterator<IPlayer> i = players.iterator();
+		while(i.hasNext()) {
+			if (i instanceof Avatar) {
+				Avatar a = (Avatar)i;
+				a.setPosition(-52f, -.2f, 239.6f);
+				return a.getPosition();
+			}
+		}
+		return null;
 	}
 	
 	public void setEarParameters(SceneManager sm) {
