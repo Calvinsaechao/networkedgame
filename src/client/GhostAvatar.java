@@ -17,7 +17,11 @@ public class GhostAvatar implements IPlayer{
 		this.id=id;
 	}
 	
-	public static UUID getID() {
+	public static UUID getUUID() {
+		return id;
+	}
+	
+	public UUID getID() {
 		return id;
 	}
 	

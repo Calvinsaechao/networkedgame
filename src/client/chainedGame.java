@@ -66,6 +66,22 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
 
+/**
+ * TODO:
+ * Countdown screen
+ * Win screen
+ * Collisions with box and coin
+ * Sound
+ * 
+ * NOTES:
+ * Start track: x=2.04, z=357
+ * End Track: x=2.04, z=-214.2
+ * 
+ * Car1 start: x=2.04, z=357
+ * Car2 start: x=-76.65, z=357
+ *
+ */
+
 public class chainedGame extends VariableFrameRateGame{
 	GL4RenderSystem rs;
 	float elapsTime = 0.0f, elapsTimeSec;
@@ -196,6 +212,7 @@ public class chainedGame extends VariableFrameRateGame{
 	protected void setupScene(Engine eng, SceneManager sm) throws IOException {
 		this.sm =sm;
 		im = new GenericInputManager();
+		setupNetworking();
 		//-------------Skybox-------------//
 		makeSkybox(eng,sm);
 		
@@ -264,7 +281,6 @@ public class chainedGame extends VariableFrameRateGame{
 		setupInputs();
 		setupOrbitCameras(eng, sm);
 		//initAudio(sm);
-		setupNetworking();
 	}
 	
 	private void initPhysicsSystem() {
@@ -281,7 +297,7 @@ public class chainedGame extends VariableFrameRateGame{
 		float up[] = {0,1,0};
 		double[] temptf;
 		float[] size = {2.0f, 2.0f, 2.0f};
-		UUID ghostID = (UUID)GhostAvatar.getID();
+		UUID ghostID = (UUID)GhostAvatar.getUUID();
 		
 		SceneNode root = getEngine().getSceneManager().getRootSceneNode();
 		
@@ -366,7 +382,6 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	protected void makeMan(SceneManager sm, Vector3 pos) throws IOException{
-		//SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
 		Entity manSE = sm.createEntity("man", "man.obj");
 		manSE.setPrimitive(Primitive.TRIANGLES);
 		SceneNode manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
@@ -377,8 +392,6 @@ public class chainedGame extends VariableFrameRateGame{
 		manN.attachObject(manSE);
 		manN.scale(1.8f, 1.8f, 1.8f);
 		manN.setLocalPosition(pos);
-		//load animations
-		//manSE.loadAnimation("man_wave", "man_animated.rka");
 	}
 	
 	
@@ -449,7 +462,6 @@ public class chainedGame extends VariableFrameRateGame{
 	protected void setupInputs() {
 		im = new GenericInputManager();
 		ArrayList<Controller> controllers = im.getControllers();
-		//String kbName = im.getKeyboardName();
 		
 		SceneNode AvatarN = sm.getSceneNode("playerNode");
 		Action moveRightAction = new MoveRtAction(AvatarN, protClient, this);
@@ -819,9 +831,11 @@ public class chainedGame extends VariableFrameRateGame{
 	public Vector3 moveCar(UUID id) {
 		Iterator<IPlayer> i = players.iterator();
 		while(i.hasNext()) {
-			if (i instanceof Avatar) {
-				Avatar a = (Avatar)i;
-				a.setPosition(-52f, -.2f, 239.6f);
+			IPlayer player = i.next();
+			if (player.getID() == id) {
+				Avatar a = (Avatar)player;
+				a.setPosition(-76.65f, -.2f, 357f);
+				System.out.println("Move Car Success!");
 				return a.getPosition();
 			}
 		}

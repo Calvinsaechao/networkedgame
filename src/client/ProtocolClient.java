@@ -52,12 +52,14 @@ public class ProtocolClient extends GameConnectionClient{
 						UUID ghostID = UUID.fromString(msgTokens[1]);
 						removeGhostAvatar(ghostID);
 					}
-					/*
+					
 					if(msgTokens[0].compareTo("moveCar") == 0) {
 						//format: moveCar
+						System.out.println("Client recieve moveCar");
 						sendMoveMessage(moveCar(id));
+						System.out.println("client moved car and updated other clients");
 					}
-					*/
+					
 					if((msgTokens[0].compareTo("dsfr") == 0)
 						|| (msgTokens[0].compareTo("create") == 0)){
 							//format: create, remoteId, x,y,z or dsfr, remoteID, x,y,z
@@ -201,10 +203,10 @@ public class ProtocolClient extends GameConnectionClient{
 			public UUID getID() {
 				return id;
 			}
-			/*
+			
 			public Vector3 moveCar(UUID id) {
 				return game.moveCar(id);
-			} */
+			} 
 			
 			public void sendByeMessage() {
 				//format: bye, clientID

@@ -33,8 +33,10 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					sendJoinedMessage(clientID, true);
 					System.out.println(clientID.toString() +" has connected.");
 					players.add(clientID);
-				//	if (players.size() > 1)
-				//		sendMoveCarMessage(clientID);
+					if (players.size() > 1) {
+						System.out.println("Sending Move Msg");
+						sendMoveCarMessage(clientID);
+					}
 				}catch(IOException e) {e.printStackTrace();}
 			}
 			
@@ -154,14 +156,14 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					forwardPacketToAll(message, clientID);
 				}catch(IOException e) {e.printStackTrace();}
 	}
-	/*
+	
 	private void sendMoveCarMessage(UUID clientID) {
 		// format: moveCar
 		try {
 			String message = new String("moveCar");
 			sendPacket(message, clientID);
 		}catch(IOException e) {e.printStackTrace();}
-	} */
+	} 
 	
 	private void sendOrientationMessages(UUID clientID, String[] pos) {
 		// format : move, clientID, x,y,z
