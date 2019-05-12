@@ -196,7 +196,6 @@ public class chainedGame extends VariableFrameRateGame{
 	protected void setupScene(Engine eng, SceneManager sm) throws IOException {
 		this.sm =sm;
 		im = new GenericInputManager();
-		setupNetworking();
 		//-------------Skybox-------------//
 		makeSkybox(eng,sm);
 		
@@ -265,6 +264,7 @@ public class chainedGame extends VariableFrameRateGame{
 		setupInputs();
 		setupOrbitCameras(eng, sm);
 		//initAudio(sm);
+		setupNetworking();
 	}
 	
 	private void initPhysicsSystem() {
