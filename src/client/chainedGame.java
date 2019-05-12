@@ -495,6 +495,11 @@ public class chainedGame extends VariableFrameRateGame{
 					 net.java.games.input.Component.Identifier.Key.D, 
 					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
    		 }
+   		 if (c.getType() == Controller.Type.MOUSE) {
+   			 im.associateAction(c,
+   					net.java.games.input.Component.Identifier.Button.LEFT,
+   					moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+   		 }
 		}
 	}
 	
@@ -696,7 +701,6 @@ public class chainedGame extends VariableFrameRateGame{
 		manSE.loadAnimation("man_wave", "man_animated.rka");
 		//doTheWave();
 	}
-	
 	
 	private void doTheWave() {
 		SkeletalEntity manSE = (SkeletalEntity)getEngine().getSceneManager().getEntity("man");
