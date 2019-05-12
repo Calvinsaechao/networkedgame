@@ -2,6 +2,7 @@ package client;
 
 import java.awt.Color;
 import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.geom.AffineTransform;
 import java.net.InetAddress;
@@ -167,7 +168,10 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	@Override
 	protected void setupWindow(RenderSystem rs, GraphicsEnvironment ge) {
-		rs.createRenderWindow(new DisplayMode(1000,700,24,60), false);
+		GraphicsDevice device = ge.getDefaultScreenDevice();
+		DisplaySettingsDialog dispSetting = new DisplaySettingsDialog(device);
+		dispSetting.showIt();
+		rs.createRenderWindow(dispSetting.getSelectedDisplayMode(), false);
 	}
 	
 	protected void setupWindowViewports(RenderWindow rw) {
