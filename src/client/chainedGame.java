@@ -538,7 +538,7 @@ public class chainedGame extends VariableFrameRateGame{
 		elapsTimeSec = Math.round(elapsTime/1000.0f);
 		elapsTimeStr = Integer.toString((int) elapsTimeSec);
 		dispStr = "PLAYER 1 SCORE: " + elapsTimeStr + "   PLAYER 2 SCORE: " + elapsTimeStr;  
-		rs.setHUD(dispStr, 15, 15);
+		rs.setHUD(dispStr);
 		processNetworking(elapsTime, sm);
 		long modTime = scriptFile1.lastModified();
 		if(modTime > fileLastModifiedTime) {
