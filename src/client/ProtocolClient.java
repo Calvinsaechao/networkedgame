@@ -18,6 +18,7 @@ public class ProtocolClient extends GameConnectionClient{
 	private chainedGame game;
 	private UUID id;
 	private ArrayList<GhostAvatar> ghostAvatars;
+	public boolean winner;
 	
 	public ProtocolClient(InetAddress remAddr, int remPort,
 			ProtocolType pType, chainedGame game) throws IOException{
@@ -45,6 +46,20 @@ public class ProtocolClient extends GameConnectionClient{
 							game.setIsConnected(false);
 							System.out.println(id.toString()+", you have failed to join.");
 						}
+					}
+
+					
+					if(msgTokens[0].compareTo("win") == 0) {
+						//format: win, remoteid, boolean
+						System.out.println("client recieved packets");
+						System.out.println(id.toString());
+						System.out.println(msgTokens[1]);
+						if (id.toString().equalsIgnoreCase(msgTokens[1])) {
+							System.out.println("Test true");
+							game.winner();
+						}
+						else game.playersCollided();
+						winner = true;
 					}
 					
 					if(msgTokens[0].compareTo("bye") == 0) {
@@ -145,6 +160,14 @@ public class ProtocolClient extends GameConnectionClient{
 				} catch (IOException e) { e.printStackTrace();}
 			}
 			//add send messages
+			
+			public void sendWinMessage() {
+				try {
+					System.out.println("chain calls send msg");
+					String message = new String("win," + id.toString());
+					sendPacket(message);
+				}	catch(IOException e) { e.printStackTrace();}
+			}
 			
 			public void createGhostAvatar(UUID ghostID, Vector3 ghostPosition) {
 				GhostAvatar avatar = new GhostAvatar(ghostID, ghostPosition);

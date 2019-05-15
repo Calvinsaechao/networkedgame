@@ -94,6 +94,7 @@ public class chainedGame extends VariableFrameRateGame{
 	private long fileLastModifiedTime;
 	private Camera3PController orbitController;
 	private NPCcontroller npcCtrl;
+	private boolean winCondition;
 	
 	//players
 	private ArrayList<IPlayer> players;
@@ -134,6 +135,8 @@ public class chainedGame extends VariableFrameRateGame{
 		scriptFile1 = new File("client\\setGhostParams.js"); //Read up on File Separator
 		this.players = new ArrayList<IPlayer>();
 		this.collideObjects = new ArrayList<SceneNode>();
+		winCondition = false;
+		isClose = false;
 	}
 	
 	public static void main(String[] args) {
@@ -471,59 +474,61 @@ public class chainedGame extends VariableFrameRateGame{
 		im = new GenericInputManager();
 		ArrayList<Controller> controllers = im.getControllers();
 		
-		SceneNode AvatarN = sm.getSceneNode("playerNode");
-		Action moveRightAction = new MoveRtAction(AvatarN, protClient, this);
-		Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient, this);
-		Action moveForwardAction = new MoveFwdAction(AvatarN, protClient, this);
-		Action moveLeftAction = new MoveLeftAction(AvatarN, protClient, this);
-		Action orbitAroundAction = new OrbitRightAction(orbitController);
-		Action orbitLeftAction = new OrbitLeftAction(orbitController);
-		Action orbitUpAction = new OrbitUpAction(orbitController);
-    	Action orbitDownAction = new OrbitDownAction(orbitController);
-		Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
-		Action turnAction = new TurnAction(AvatarN, protClient,this);
-		
-		for (Controller c : controllers) {
-   		 if (c.getType() == Controller.Type.KEYBOARD) {
-   			 im.associateAction(c,
-				net.java.games.input.Component.Identifier.Key.W,
-				moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-   			 im.associateAction(c,
-				net.java.games.input.Component.Identifier.Key.Q,
-				moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-   			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.E,
-   					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-   			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Key.S,
-   					moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-   			 im.associateAction(c,
-				net.java.games.input.Component.Identifier.Key.ESCAPE,
-				sendCloseConPckAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
-   			im.associateAction(c, 
-   					net.java.games.input.Component.Identifier.Key.LEFT,
-   					orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-			 im.associateAction(c, 
-					 net.java.games.input.Component.Identifier.Key.RIGHT,
-					 orbitLeftAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-			 im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.UP, 
-					 orbitUpAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
- 			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.DOWN, 
-					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
- 			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.A, 
-					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
- 			im.associateAction(c,
-					 net.java.games.input.Component.Identifier.Key.D, 
-					 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-   		 }
-   		 if (c.getType() == Controller.Type.MOUSE) {
-   			 im.associateAction(c,
-   					net.java.games.input.Component.Identifier.Button.LEFT,
-   					moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-   		 }
+		if(players.get(0).isCollided() == false) {
+			SceneNode AvatarN = sm.getSceneNode("playerNode");
+			Action moveRightAction = new MoveRtAction(AvatarN, protClient, this);
+			Action moveBackwardAction = new MoveBackwardAction(AvatarN, protClient, this);
+			Action moveForwardAction = new MoveFwdAction(AvatarN, protClient, this);
+			Action moveLeftAction = new MoveLeftAction(AvatarN, protClient, this);
+			Action orbitAroundAction = new OrbitRightAction(orbitController);
+			Action orbitLeftAction = new OrbitLeftAction(orbitController);
+			Action orbitUpAction = new OrbitUpAction(orbitController);
+	    	Action orbitDownAction = new OrbitDownAction(orbitController);
+			Action sendCloseConPckAction = new SendCloseConnectionPacketAction();
+			Action turnAction = new TurnAction(AvatarN, protClient,this);
+			
+			for (Controller c : controllers) {
+	   		 if (c.getType() == Controller.Type.KEYBOARD) {
+	   			 im.associateAction(c,
+					net.java.games.input.Component.Identifier.Key.W,
+					moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	   			 im.associateAction(c,
+					net.java.games.input.Component.Identifier.Key.Q,
+					moveLeftAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	   			 im.associateAction(c,
+	   					net.java.games.input.Component.Identifier.Key.E,
+	   					moveRightAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	   			 im.associateAction(c,
+	   					net.java.games.input.Component.Identifier.Key.S,
+	   					moveBackwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	   			 im.associateAction(c,
+					net.java.games.input.Component.Identifier.Key.ESCAPE,
+					sendCloseConPckAction, InputManager.INPUT_ACTION_TYPE.ON_PRESS_ONLY);
+	   			im.associateAction(c, 
+	   					net.java.games.input.Component.Identifier.Key.LEFT,
+	   					orbitAroundAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+				 im.associateAction(c, 
+						 net.java.games.input.Component.Identifier.Key.RIGHT,
+						 orbitLeftAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+				 im.associateAction(c,
+						 net.java.games.input.Component.Identifier.Key.UP, 
+						 orbitUpAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	 			im.associateAction(c,
+						 net.java.games.input.Component.Identifier.Key.DOWN, 
+						 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	 			im.associateAction(c,
+						 net.java.games.input.Component.Identifier.Key.A, 
+						 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	 			im.associateAction(c,
+						 net.java.games.input.Component.Identifier.Key.D, 
+						 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	   		 }
+	   		 if (c.getType() == Controller.Type.MOUSE) {
+	   			 im.associateAction(c,
+	   					net.java.games.input.Component.Identifier.Button.LEFT,
+	   					moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+	   		 }
+			}
 		}
 	}
 	
@@ -558,7 +563,7 @@ public class chainedGame extends VariableFrameRateGame{
 		elapsTimeSec = Math.round(elapsTime/1000.0f);
 		elapsTimeStr = Integer.toString((int) elapsTimeSec);
 		dispStr = "PLAYER 1 SCORE: " + elapsTimeStr + "   PLAYER 2 SCORE: " + elapsTimeStr;  
-		rs.setHUD(dispStr);
+		//rs.setHUD(dispStr);
 		processNetworking(elapsTime, sm);
 		long modTime = scriptFile1.lastModified();
 		if(modTime > fileLastModifiedTime) {
@@ -570,8 +575,16 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 		checkPlayerCollisions();
 		
-		if (isBothCollided()) {
-			rs.setHUD("YOU BOTH LOSE");
+		if(isBothCollided() && (winCondition == true)) {
+			rs.setHUD("YOU WIN!");
+		}
+		
+		else if(isBothCollided() && (winCondition == false)) {
+			rs.setHUD("YOU LOSE");
+		}
+		
+		if (players.get(0).isCollided()) {
+			setupInputs();
 		}
 		
 		// PHYSICS
@@ -791,11 +804,18 @@ public class chainedGame extends VariableFrameRateGame{
 						isClose = true;
 						//System.out.println("isWaving=true");
 						doTheWave();
+						if(winCondition == false) {
+							protClient.sendWinMessage();
+						}
 					}
-			}else {
-				isClose=false;
 			}
 			
+		}
+	}
+	
+	public void playersCollided() {
+		for(IPlayer p : players) {
+			p.collided();
 		}
 	}
 	
@@ -889,4 +909,13 @@ public class chainedGame extends VariableFrameRateGame{
 			
 		}
 	}
+
+	public void winner() {
+		winCondition = true;
+		System.out.println("players collided");
+		for(IPlayer p : players) {
+			p.collided();
+		}
+	}
+
 }// end game

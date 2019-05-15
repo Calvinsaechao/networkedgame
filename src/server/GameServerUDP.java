@@ -10,10 +10,12 @@ import ray.networking.server.IClientInfo;
 
 public class GameServerUDP extends GameConnectionServer<UUID> {
 	private ArrayList<UUID> players;
+	private UUID winner;
 
 	public GameServerUDP(int localPort) throws IOException {
 		super(localPort, ProtocolType.UDP);
 		players = new ArrayList<UUID>();
+		winner = null;
 	}
 	
 	@Override
@@ -35,9 +37,19 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					players.add(clientID);
 					if (players.size() > 1) {
 						System.out.println("Sending Move Msg");
-						sendMoveCarMessage(clientID);
+						sendMoveCarMessage(clientID); 
 					}
 				}catch(IOException e) {e.printStackTrace();}
+			}
+			
+			if(msgTokens[0].compareTo("win") == 0) {
+				//format : win, localId
+				System.out.println("server packet recieved.");
+				UUID clientID = UUID.fromString(msgTokens[1]);
+				if(winner == null) {
+					winner = clientID;
+					sendWinMessages(clientID);
+				}
 			}
 			
 			// sever receives CREATE message
@@ -105,6 +117,13 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 		}catch(IOException e) {e.printStackTrace();}
 		
 	}
+	private void sendWinMessages(UUID clientID) {
+		try {
+			System.out.println("Forward all packets");
+			String message = new String("win," + clientID.toString());
+			sendPacketToAll(message);
+		} catch(IOException e) {e.printStackTrace();}
+	}
 
 	private void sendJoinedMessage(UUID clientID, boolean success) {
 		//format : join, success or join, failure
@@ -154,6 +173,7 @@ public class GameServerUDP extends GameConnectionServer<UUID> {
 					message += "," + pos[1];
 					message += "," + pos[2];
 					forwardPacketToAll(message, clientID);
+					//sendPacket(message,clientID);
 				}catch(IOException e) {e.printStackTrace();}
 	}
 	
