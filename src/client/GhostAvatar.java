@@ -12,6 +12,7 @@ public class GhostAvatar implements IPlayer{
 	private static UUID id;
 	private SceneNode node;
 	private Entity entity;
+	private boolean collided;
 	
 	public GhostAvatar(UUID id, Vector3 position) {
 		this.id=id;
@@ -46,5 +47,13 @@ public class GhostAvatar implements IPlayer{
 	
 	public Vector3 getPosition() {
 		return node.getLocalPosition();
+	}
+	
+	public void collided() {
+		collided = true;
+	}
+	
+	public boolean isCollided() {
+		return collided;
 	}
 }

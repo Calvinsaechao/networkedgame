@@ -99,6 +99,9 @@ public class chainedGame extends VariableFrameRateGame{
 	private ArrayList<IPlayer> players;
 	private SceneNode playerN, manN, cameraN;
 	
+	//objects
+	private ArrayList<SceneNode> collideObjects;
+	
 	//client/server
 	private String serverAddress;
 	private int serverPort;
@@ -130,6 +133,7 @@ public class chainedGame extends VariableFrameRateGame{
 		this.serverProtocol = ProtocolType.UDP;
 		scriptFile1 = new File("client\\setGhostParams.js"); //Read up on File Separator
 		this.players = new ArrayList<IPlayer>();
+		this.collideObjects = new ArrayList<SceneNode>();
 	}
 	
 	public static void main(String[] args) {
@@ -366,6 +370,7 @@ public class chainedGame extends VariableFrameRateGame{
 		boxN.attachObject(boxE);
 		boxN.scale(3f, 3f, 3f);
 		boxN.setLocalPosition(pos);
+		collideObjects.add(boxN);
 	}
 	
 	protected void makeBox2 (SceneManager sm, Vector3 pos) throws IOException {
@@ -379,6 +384,7 @@ public class chainedGame extends VariableFrameRateGame{
 		boxN.attachObject(boxE);
 		boxN.scale(3f, 3f, 3f);
 		boxN.setLocalPosition(pos);
+		collideObjects.add(boxN);
 	}
 	
 	protected void makeMan(SceneManager sm, Vector3 pos) throws IOException{
@@ -420,6 +426,7 @@ public class chainedGame extends VariableFrameRateGame{
 		//Node controller
 		setupElevationController(goldCoinN, sm);
 		setupRotationController(goldCoinN, sm);
+		collideObjects.add(goldCoinN);
 	}
 	
 	protected void makeGoldCoin2 (SceneManager sm, Vector3 pos) throws IOException {
@@ -441,6 +448,7 @@ public class chainedGame extends VariableFrameRateGame{
 		//Node controller
 		setupElevationController(goldCoinN, sm);
 		setupRotationController(goldCoinN, sm);
+		collideObjects.add(goldCoinN);
 	}
 	
 	public void updateVerticalPosition() {
@@ -559,6 +567,11 @@ public class chainedGame extends VariableFrameRateGame{
 			this.executeScript(jsEngine, scriptFile1);
 			float scale = Double.valueOf((Double)jsEngine.get("scale")).floatValue();
 			protClient.scaleGhostAvatars(scale);
+		}
+		checkPlayerCollisions();
+		
+		if (isBothCollided()) {
+			rs.setHUD("YOU BOTH LOSE");
 		}
 		
 		// PHYSICS
@@ -786,6 +799,14 @@ public class chainedGame extends VariableFrameRateGame{
 		}
 	}
 	
+	private boolean isBothCollided() {
+		boolean bool = true;
+		for (IPlayer p : players) {
+			bool = p.isCollided() && bool;
+		}
+		return bool;
+	}
+	
 	public void initAudio(SceneManager sm) {
 		AudioResource resource1, resource2, resource3;
 		audioMgr = AudioManagerFactory.createAudioManager("ray.audio.joal.JOALAudioManager");
@@ -850,4 +871,22 @@ public class chainedGame extends VariableFrameRateGame{
 		audioMgr.getEar().setOrientation(camDir, Vector3f.createFrom(0,1,0));
 		}
 	
+	public void checkPlayerCollisions() {
+		
+		for (IPlayer p : players) {
+			Vector3 playerPos = p.getPosition();
+			for (SceneNode n : collideObjects) {
+				Vector3 pos = n.getLocalPosition();
+				float distX = (float) Math.sqrt(Math.pow(playerPos.x()-pos.x(),2));
+				float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-pos.z(),2));
+				if(distX <= 20.0f) {
+						if(distZ <= 20.0f) {
+							n.detachAllObjects();
+							p.collided();
+						}
+				}
+			}
+			
+		}
+	}
 }// end game
