@@ -42,6 +42,7 @@ public class ProtocolClient extends GameConnectionClient{
 							sendCreateMessage(game.getPlayerPosition());
 							System.out.println(id.toString()+", you have joined successfully.");
 						}
+						
 						if(msgTokens[1].compareTo("failure") == 0) {
 							game.setIsConnected(false);
 							System.out.println(id.toString()+", you have failed to join.");

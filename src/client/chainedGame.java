@@ -287,7 +287,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		setupInputs();
 		setupOrbitCameras(eng, sm);
-		//initAudio(sm);
+		initAudio(sm);
 	}
 	
 	private void initPhysicsSystem() {
