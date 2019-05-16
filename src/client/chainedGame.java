@@ -123,8 +123,8 @@ public class chainedGame extends VariableFrameRateGame{
 	boolean animationStarted = false;
 	
 	// Sound
-	IAudioManager audioMgr;
-	Sound helloSound, carSound, crashSound;
+	private IAudioManager audioMgr;
+	private Sound helloSound, carSound, crashSound;
 	
 	
 	public chainedGame(String serverAddr, int sPort) {
@@ -287,7 +287,7 @@ public class chainedGame extends VariableFrameRateGame{
 		
 		setupInputs();
 		setupOrbitCameras(eng, sm);
-		initAudio(sm);
+		//initAudio(sm);
 	}
 	
 	private void initPhysicsSystem() {
@@ -608,6 +608,8 @@ public class chainedGame extends VariableFrameRateGame{
 		checkNPCCollision();
 		if (((int)elapsTime)%2==0) {
 			manSE.update(); }
+		
+		//setEarParameters(sm);
  	}
 	
 	protected void processNetworking(float elapsTime, SceneManager sm) {
@@ -724,7 +726,8 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void setupNPC(SceneManager sm) throws IOException {
-		Vector3 pos = (Vector3)Vector3f.createFrom(52.04f, 1f, 255.9f);
+		Vector3 pos = (Vector3)Vector3f.createFrom(-38f, 1f, -250f);
+		//Vector3 pos = (Vector3)Vector3f.createFrom(52.04f, 1f, 255.9f);
 		SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
 		//Entity manSE = sm.createEntity("man", "man.obj");
 		manSE.setPrimitive(Primitive.TRIANGLES);
@@ -736,7 +739,7 @@ public class chainedGame extends VariableFrameRateGame{
 		manN.attachObject(manSE);
 		manN.scale(2f, 2f, 2f);
 		manN.setLocalPosition(pos);
-		manN.yaw(Degreef.createFrom(-65));
+		//manN.yaw(Degreef.createFrom(-65));
 		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
 		npcCtrl = new NPCcontroller(manN);
 		//load animations
@@ -794,12 +797,20 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void checkNPCCollision() {
-		Vector3 man1pos = (Vector3)Vector3f.createFrom(31.9f, 1f, 145.07f);
+		Vector3 man1pos = (Vector3)Vector3f.createFrom(-38f, 1f, -250f);
 		for (IPlayer p : players) {
 			Vector3 playerPos = p.getPosition();
 			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
-			if(distX <= 100.0f) {
+			if(playerPos.z() < -215f) {
+				isClose = true;
+				doTheWave();
+				if(winCondition==false) {
+					System.out.println("We got a winner");
+					protClient.sendWinMessage();
+				}
+			}
+			/*if(distX <= 100.0f) {
 					if(distZ <= 100.0f) {
 						isClose = true;
 						//System.out.println("isWaving=true");
@@ -808,7 +819,7 @@ public class chainedGame extends VariableFrameRateGame{
 							protClient.sendWinMessage();
 						}
 					}
-			}
+			}*/
 			
 		}
 	}
@@ -830,20 +841,26 @@ public class chainedGame extends VariableFrameRateGame{
 	public void initAudio(SceneManager sm) {
 		AudioResource resource1, resource2, resource3;
 		audioMgr = AudioManagerFactory.createAudioManager("ray.audio.joal.JOALAudioManager");
+		System.out.println(audioMgr);
 		if (!audioMgr.initialize()) {
 			System.out.println("Audio Manager failed to initialize! ");
 			return;
 		}
+		
 		//resource1 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
-		resource2 = audioMgr.createAudioResource("assets/sounds/car_moving_loop.wav", AudioResourceType.AUDIO_SAMPLE);
+		resource2 = audioMgr.createAudioResource("car_moving_loop.wav", AudioResourceType.AUDIO_SAMPLE);
+		System.out.println("something1");
 		//resource3 = audioMgr.createAudioResource("defaultsound.wav", AudioResourceType.AUDIO_SAMPLE);
 		
 		//helloSound = new Sound (resource1, SoundType.SOUND_EFFECT, 100, true);
-		carSound = new Sound (resource2, SoundType.SOUND_EFFECT, 100, true);
+		carSound = new Sound(resource2, SoundType.SOUND_EFFECT, 100, true);
+		System.out.println("something2");
 		//crashSound = new Sound (resource3, SoundType.SOUND_EFFECT, 100, true);
 		
 		//helloSound.initialize(audioMgr);
+		System.out.println(carSound);
 		carSound.initialize(audioMgr);
+		System.out.println("car sound");
 		//crashSound.initialize(audioMgr);
 		
 		//helloSound.setMaxDistance(10.0f);
@@ -862,11 +879,11 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode manN = sm.getSceneNode("manNode");
 		carSound.setLocation(carN.getWorldPosition());
 		helloSound.setLocation(manN.getWorldPosition());
-		setEarParameters(sm);
 		
+		setEarParameters(sm);
+	
 		//helloSound.play();
 		carSound.play();
-		
 	}
 	
 	public Vector3 moveCar(UUID id) {
@@ -884,9 +901,9 @@ public class chainedGame extends VariableFrameRateGame{
 	}
 	
 	public void setEarParameters(SceneManager sm) {
-		SceneNode cameraN = sm.getSceneNode("MainCameraNode");
+		//SceneNode cameraN = sm.getSceneNode("MainCameraNode");
 		Vector3 camDir = cameraN.getWorldForwardAxis();
-		
+		//System.out.println(audioMgr.getEar());
 		audioMgr.getEar().setLocation(cameraN.getWorldPosition());
 		audioMgr.getEar().setOrientation(camDir, Vector3f.createFrom(0,1,0));
 		}

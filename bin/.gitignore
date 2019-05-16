@@ -1,5 +1,9 @@
-/client/
-/server/
 /ActionClasses/
+/Controllers/
+/InterfaceClasses/
+/assets/
+/client/
 /runClient.bat
 /runServer.bat
+/server/
+/audio/
