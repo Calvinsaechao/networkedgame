@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="/javagaming/vecmath/vecmath.jar"/>
 	<classpathentry kind="lib" path="C:/javagaming/jogamp-all-platforms/jar/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="C:/javagaming/jogamp-all-platforms/jar/jogl-all.jar"/>
+	<classpathentry kind="lib" path="C:/javagaming/jogamp-all-platforms/jar/joal.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

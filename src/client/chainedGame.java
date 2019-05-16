@@ -66,6 +66,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.*;
 
+
+
 /**
  * TODO:
  * Countdown screen
@@ -311,7 +313,7 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode chainN = (SceneNode)root.getChild("chainNode");
 		temptf = toDoubleArray(chainN.getLocalTransform().toFloatArray());
 		chainPhysObj = physicsEng.addSphereObject(physicsEng.nextUID(), mass, temptf, 2.0f);
-		//chainPhysObj.setBounciness(1.0f);
+		chainPhysObj.setBounciness(1.0f);
 		chainN.setPhysicsObject(chainPhysObj);
 				
 		SceneNode gndNode = (SceneNode)root.getChild(GROUND_N);
@@ -360,6 +362,7 @@ public class chainedGame extends VariableFrameRateGame{
 		SceneNode chainN = sm.getRootSceneNode().createChildSceneNode(chainE.getName()+"Node");
 		chainN.attachObject(chainE);
 		chainN.setLocalPosition(pos);
+		collideObjects.add(chainN);
 	}
 	
 	protected void makeBox1 (SceneManager sm, Vector3 pos) throws IOException {
@@ -678,15 +681,6 @@ public class chainedGame extends VariableFrameRateGame{
 			playerN.yaw(Degreef.createFrom(180));
 			protClient.addGhostAvatar(avatar);
 			players.add(avatar);
-			//Physics
-			/**
-			SceneNode carYellow = playerN.createChildSceneNode("physicsCarY");
-			temptf = toDoubleArray(carYellow.getLocalTransform().toFloatArray());
-			carYellowP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-			//PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), carYellowP, chainPhysObj);
-			
-			System.out.println("Ball socket created...");
-			**/
 		} 
 	}
 	
@@ -710,16 +704,6 @@ public class chainedGame extends VariableFrameRateGame{
 			avatar.setEntity(playerE);
 			playerN.yaw(Degreef.createFrom(180));
 			players.add(avatar);
-			//Physics //
-			
-			SceneNode carBlue = playerN.createChildSceneNode("physicsCarB");
-			temptf = toDoubleArray(playerN.getLocalTransform().toFloatArray());
-			carBlueP = physicsEng.addBoxObject(physicsEng.nextUID(), mass, temptf, size);
-			carBlue.setPhysicsObject(carBlueP);
-
-			PhysicsBallSocketConstraint connection = physicsEng.addBallSocketConstraint(physicsEng.nextUID(), chainPhysObj, carBlueP);
-			connection.getBodyA().setTransform(temptf);
-			System.out.println("I dont know...");  
 		
 		}
 		
@@ -727,9 +711,7 @@ public class chainedGame extends VariableFrameRateGame{
 	
 	public void setupNPC(SceneManager sm) throws IOException {
 		Vector3 pos = (Vector3)Vector3f.createFrom(-38f, 1f, -250f);
-		//Vector3 pos = (Vector3)Vector3f.createFrom(52.04f, 1f, 255.9f);
 		SkeletalEntity manSE = sm.createSkeletalEntity("man", "man_animated.rkm", "man_animated.rks");
-		//Entity manSE = sm.createEntity("man", "man.obj");
 		manSE.setPrimitive(Primitive.TRIANGLES);
 		manN = sm.getRootSceneNode().createChildSceneNode(manSE.getName() + "Node");
 		Texture texMan = this.getEngine().getTextureManager().getAssetByPath("man_animated.png");
@@ -739,12 +721,9 @@ public class chainedGame extends VariableFrameRateGame{
 		manN.attachObject(manSE);
 		manN.scale(2f, 2f, 2f);
 		manN.setLocalPosition(pos);
-		//manN.yaw(Degreef.createFrom(-65));
-		//makeMan(sm, (Vector3)Vector3f.createFrom(31.9f, -1.8f, 145.07f));
 		npcCtrl = new NPCcontroller(manN);
 		//load animations
 		manSE.loadAnimation("man_wave", "man_animated.rka");
-		//doTheWave();
 	}
 	
 	private void doTheWave() {
@@ -752,20 +731,15 @@ public class chainedGame extends VariableFrameRateGame{
 		if (isClose) { 
 			if (animationStarted==false) {
 				manSE.playAnimation("man_wave", 1f, SkeletalEntity.EndType.LOOP, 3);
-				//System.out.println("doing the wave");
 				animationStarted=true;
-				//System.out.println("anim=true");
 				}
 		}else {
 			if(animationStarted==true) {
 				//stop 
-				//System.out.println("anim is true - stop");
 				manSE.stopAnimation();
 				animationStarted=false;
-				//System.out.println("anim=false");
 			}
 		}
-		//System.out.println("doing the wave");
 	}  
 	
 	public void setIsConnected(boolean bool) {
@@ -802,24 +776,15 @@ public class chainedGame extends VariableFrameRateGame{
 			Vector3 playerPos = p.getPosition();
 			float distX = (float) Math.sqrt(Math.pow(playerPos.x()-man1pos.x(),2));
 			float distZ = (float) Math.sqrt(Math.pow(playerPos.z()-man1pos.z(),2));
-			if(playerPos.z() < -215f) {
+			if(playerPos.z() < -218f) {
 				isClose = true;
 				doTheWave();
 				if(winCondition==false) {
 					System.out.println("We got a winner");
 					protClient.sendWinMessage();
+					//winner();
 				}
 			}
-			/*if(distX <= 100.0f) {
-					if(distZ <= 100.0f) {
-						isClose = true;
-						//System.out.println("isWaving=true");
-						doTheWave();
-						if(winCondition == false) {
-							protClient.sendWinMessage();
-						}
-					}
-			}*/
 			
 		}
 	}
