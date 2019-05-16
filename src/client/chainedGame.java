@@ -528,7 +528,7 @@ public class chainedGame extends VariableFrameRateGame{
 	   		 }
 	   		 if (c.getType() == Controller.Type.MOUSE) {
 	   			 im.associateAction(c,
-	   					net.java.games.input.Component.Identifier.Button.LEFT,
+	   					net.java.games.input.Component.Identifier.Button.MIDDLE,
 	   					moveForwardAction, InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 	   		 }
 			}
