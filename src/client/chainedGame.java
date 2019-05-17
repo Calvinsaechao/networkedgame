@@ -70,9 +70,6 @@ import java.io.*;
 
 /**
  * TODO:
- * Countdown screen
- * Win screen
- * Collisions with box and coin
  * Sound
  * 
  * NOTES:
@@ -782,7 +779,6 @@ public class chainedGame extends VariableFrameRateGame{
 				if(winCondition==false) {
 					System.out.println("We got a winner");
 					protClient.sendWinMessage();
-					//winner();
 				}
 			}
 			
