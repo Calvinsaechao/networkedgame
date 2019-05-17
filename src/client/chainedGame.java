@@ -510,12 +510,12 @@ public class chainedGame extends VariableFrameRateGame{
 				 im.associateAction(c, 
 						 net.java.games.input.Component.Identifier.Key.RIGHT,
 						 orbitLeftAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-				 im.associateAction(c,
+				/* im.associateAction(c,
 						 net.java.games.input.Component.Identifier.Key.UP, 
 						 orbitUpAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
 	 			im.associateAction(c,
 						 net.java.games.input.Component.Identifier.Key.DOWN, 
-						 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+						 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);	*/
 	 			im.associateAction(c,
 						 net.java.games.input.Component.Identifier.Key.A, 
 						 turnAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);

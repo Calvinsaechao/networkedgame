@@ -60,12 +60,12 @@ public class Camera3PController {
      			 im.associateAction(c,
      					 net.java.games.input.Component.Identifier.Key.RIGHT, 
      					 orbitALction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
-     			im.associateAction(c,
+     			/*im.associateAction(c,
     					 net.java.games.input.Component.Identifier.Key.UP, 
     					 orbitUpAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
      			im.associateAction(c,
     					 net.java.games.input.Component.Identifier.Key.DOWN, 
-    					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);
+    					 orbitDownAction,InputManager.INPUT_ACTION_TYPE.REPEAT_WHILE_DOWN);	*/
     		}
     	}
 	  }
